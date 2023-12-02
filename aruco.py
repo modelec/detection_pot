@@ -6,7 +6,7 @@ cap = cv.VideoCapture(0)
 
 
 # Définir le dictionnaire ArUco
-aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_250)
+aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
 
 # Créer le détecteur ArUco
 parameters = aruco.DetectorParameters()
