@@ -1,4 +1,4 @@
-# Repo detection de pot | Coupe de france de robotique
+# Detection de pot | Coupe de france de robotique
 
 ### Description
 Ce repo correspond a la detection de pot de fleur pour la coupe de france de robotique 2023
