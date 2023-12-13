@@ -37,7 +37,7 @@ while True:
 
     # Dessiner les résultats
     if ids is not None:
-        #aruco.drawDetectedMarkers(frame, corners, ids)
+        aruco.drawDetectedMarkers(frame, corners, ids)
 
         for i in range(len(ids)):
 
@@ -48,7 +48,11 @@ while True:
                     if markerID not in arucoTagMapping:
                         continue
 
-                    corners = markerCorner.reshape((4, 2))
+                    try:
+                        corners = markerCorner.reshape((4, 2))
+                    except:
+                        continue
+
                     (topLeft, topRight, bottomRight, bottomLeft) = corners
 
                     topRight = (int(topRight[0]), int(topRight[1]))
@@ -79,11 +83,14 @@ while True:
                     angle_to_tag_horizontal_deg = np.degrees(angle_to_tag_horizontal)
 
                     # Affichage des informations
-                    cv.putText(frame, f"{arucoTagMapping[markerID][0]}", (topLeft[0], topLeft[1] - 45), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    cv.putText(frame, f"{arucoTagMapping[markerID][0]}", (topLeft[0], topLeft[1] - 45),
+                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                     distance_str = "{:.2f}".format(D)
-                    cv.putText(frame, f"Distance : {distance_str} cm", (topLeft[0], topLeft[1] - 30), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    cv.putText(frame, f"Distance : {distance_str} cm", (topLeft[0], topLeft[1] - 30),
+                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
                     angle_str = "{:.2f}".format(angle_to_tag_horizontal_deg)
-                    cv.putText(frame, f"Angle : {angle_str} degrees", (topLeft[0], topLeft[1] - 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    cv.putText(frame, f"Angle : {angle_str} degrees", (topLeft[0], topLeft[1] - 15),
+                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
                     print(f"{arucoTagMapping[markerID][0]} : {angle_to_tag_horizontal_deg} degrees, {D} cm")
     # Afficher l'image
