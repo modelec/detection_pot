@@ -3,10 +3,10 @@ import cv2.aruco as aruco
 import numpy as np
 
 # Actual width of the Aruco tag in some unit (like centimeters)
-W = 1.8
+W = 20
 
 # Actual distance from the camera to the object in the same unit as W
-D = 15.0
+D = 150
 
 # Charger une image depuis la caméra (0 pour la caméra par défaut, généralement la webcam)
 cap = cv.VideoCapture(0)
@@ -43,7 +43,10 @@ while True:
                 # Loop over the detected ArUCo corners
                 for (markerCorners, markerID) in zip(corners, ids):
                     # Extract the marker corners
-                    corners = markerCorners.reshape((4, 2))
+                    try:
+                        corners = markerCorners.reshape((4, 2))
+                    except:
+                        continue
                     (topLeft, topRight, bottomRight, bottomLeft) = corners
 
                     # Convert each of the (x, y)-coordinate pairs to integers
