@@ -4,12 +4,14 @@ import numpy as np
 
 # Focal de la cam
 # Calculer la focal avec le fichier get_the_focal.py
-FOCAL_LENGTH = 600
+# FOCAL_LENGTH = 1444 # Téléphone Maxime pixel 7 pro
+FOCAL_LENGTH = 1470
+# FOCAL_LENGTH = 600
 
 arucoTagMapping = {
-    47: ["Solar Panel", 2.2],
-    36: ["White flower", 2.5],
-    13: ["Purple Flower", 1.8]
+    47: ["Panneau solaire", 3.62],
+    36: ["Fleur blanche", 2],
+    13: ["FLeur violette", 2]
 }
 
 # Charger une image depuis la caméra (0 pour la caméra par défaut, généralement la webcam)
@@ -37,7 +39,7 @@ while True:
 
     # Dessiner les résultats
     if ids is not None:
-        aruco.drawDetectedMarkers(frame, corners, ids)
+        # aruco.drawDetectedMarkers(frame, corners, ids)
 
         for i in range(len(ids)):
 
@@ -49,16 +51,17 @@ while True:
                         continue
 
                     try:
-                        corners = markerCorner.reshape((4, 2))
+                        tagCorners = markerCorner.reshape((4, 2))
                     except:
+                        print("Error with the corners")
                         continue
 
-                    (topLeft, topRight, bottomRight, bottomLeft) = corners
+                    (topLeft, topRight, bottomRight, bottomLeft) = tagCorners
 
                     topRight = (int(topRight[0]), int(topRight[1]))
+                    topLeft = (int(topLeft[0]), int(topLeft[1]))
                     bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
                     bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
-                    topLeft = (int(topLeft[0]), int(topLeft[1]))
 
                     center_x = int((topLeft[0] + topRight[0] + bottomRight[0] + bottomLeft[0]) / 4)
                     center_y = int((topLeft[1] + topRight[1] + bottomRight[1] + bottomLeft[1]) / 4)
@@ -82,17 +85,46 @@ while True:
                     # Conversion de l'angle en degrés
                     angle_to_tag_horizontal_deg = np.degrees(angle_to_tag_horizontal)
 
-                    # Affichage des informations
-                    cv.putText(frame, f"{arucoTagMapping[markerID][0]}", (topLeft[0], topLeft[1] - 45),
-                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                    distance_str = "{:.2f}".format(D)
-                    cv.putText(frame, f"Distance : {distance_str} cm", (topLeft[0], topLeft[1] - 30),
-                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                    angle_str = "{:.2f}".format(angle_to_tag_horizontal_deg)
-                    cv.putText(frame, f"Angle : {angle_str} degrees", (topLeft[0], topLeft[1] - 15),
-                               cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    # Calculate the difference in the x and y coordinates
+                    dx = topRight[0] - topLeft[0]
+                    dy = topRight[1] - topLeft[1]
 
-                    print(f"{arucoTagMapping[markerID][0]} : {angle_to_tag_horizontal_deg} degrees, {D} cm")
+                    # Calculate the angle in radians
+                    angle_radians = np.arctan2(dy, dx)
+
+                    # Convert the angle to degrees
+                    angle_degrees = np.degrees(angle_radians)
+
+                    # Print the rotation angle of the ArUco tag
+                    sens_du_tag = ""
+                    if -15 < angle_degrees < 15:
+                        sens_du_tag = "debout"
+                    elif 15 < angle_degrees < 60:
+                        sens_du_tag = "penche a droite"
+                    elif 60 < angle_degrees < 110:
+                        sens_du_tag = "tombe a droite"
+                    elif 110 < angle_degrees < 180:
+                        sens_du_tag = "a l'envers"
+                    elif -180 < angle_degrees < -110:
+                        sens_du_tag = "a l'envers"
+                    elif -110 < angle_degrees < -60:
+                        sens_du_tag = "tombe a gauche"
+                    elif -60 < angle_degrees < -15:
+                        sens_du_tag = "penche a gauche"
+
+                    # Affichage des informations
+                    cv.putText(frame, f"{arucoTagMapping[markerID][0]}, id : {markerID}", (topLeft[0], topLeft[1] - 90),
+                               cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                    distance_str = "{:.2f}".format(D)
+                    cv.putText(frame, f"Distance : {distance_str} cm", (topLeft[0], topLeft[1] - 60),
+                               cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                    angle_str = "{:.2f}".format(angle_to_tag_horizontal_deg)
+                    cv.putText(frame, f"Angle horizontale : {angle_str} degrees", (topLeft[0], topLeft[1] - 30),
+                               cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+                    cv.putText(frame, f"Le tag est {sens_du_tag}", (topLeft[0], topLeft[1]),
+                               cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+
+                    # print(f"{arucoTagMapping[markerID][0]} : {angle_to_tag_horizontal_deg} degrees, {D} cm")
     # Afficher l'image
     cv.imshow('Frame', frame)
 
