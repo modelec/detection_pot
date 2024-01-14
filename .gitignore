@@ -1,4 +1,1 @@
-/venv/
-/.idea/
-/.vscode/
-*.xml
+/cmake-build-debug/
