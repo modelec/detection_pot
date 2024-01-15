@@ -36,7 +36,9 @@ int main()
 
     cv::aruco::DetectorParameters detectorParams = cv::aruco::DetectorParameters();
     cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-    cv::aruco::ArucoDetector detector(dictionary, detectorParams);
+
+    // 4.9
+    // cv::aruco::ArucoDetector detector(dictionary, detectorParams);
 
     while (true) {
         cv::Mat frame;
@@ -52,7 +54,11 @@ int main()
 
         std::vector<int> markerIds;
         std::vector<std::vector<cv::Point2f>> markerCorners;
-        detector.detectMarkers(frame, markerCorners, markerIds);
+
+        cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, detectorParams);
+
+        // 4.9
+        // detector.detectMarkers(frame, markerCorners, markerIds);
 
         if (!markerIds.empty()) {
             cv::aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
