@@ -55,7 +55,7 @@ int main()
         std::vector<int> markerIds;
         std::vector<std::vector<cv::Point2f>> markerCorners;
 
-        cv::aruco::detectMarkers(frame, dictionary, markerCorners, markerIds, detectorParams);
+        cv::aruco::detectMarkers(frame, &dictionary, markerCorners, markerIds, &detectorParams);
 
         // 4.9
         // detector.detectMarkers(frame, markerCorners, markerIds);
