@@ -8,6 +8,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 
 set(COMMON_SOURCES
+        utils/utils.h
 )
 
 set(calibrationSources
