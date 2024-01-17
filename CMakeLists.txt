@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-
 set(COMMON_SOURCES
         utils/utils.h
 )
@@ -24,6 +23,10 @@ target_link_libraries( calibration ${OpenCV_LIBS} )
 set(arucoDetectionSources
         ${COMMON_SOURCES}
         arucoDetector.cpp
+        utils/ArucoTag.cpp
+        utils/ArucoTag.h
+        utils/ArucoDetector.cpp
+        utils/ArucoDetector.h
 )
 
 add_executable(arucoDetector ${arucoDetectionSources})
