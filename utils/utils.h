@@ -17,3 +17,14 @@ namespace Type
         float theta; // rotation around the y axis
     };
 }
+
+enum Team
+{
+    BLUE,
+    YELLOW
+};
+
+double distance(cv::Mat a)
+{
+
+}

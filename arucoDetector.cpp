@@ -34,20 +34,20 @@ int main(int argc, char *argv[])
 
     // End argument parser
 
-    const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), 0};
+    const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
-    ArucoDetector detector(robotPose, calibrationPath, cameraId, headless);
+    ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
 
     while (true) {
-        const int res = detector.detectArucoTags();
+        const auto res = detector.detectArucoTags();
 
-        if (res == -2)
+        if (res.first == -2)
         {
             std::cerr << "Error: Could not capture frame." << std::endl;
             return -2;
         }
 
-        if (res == 1)
+        if (res.first == 1)
         {
             break;
         }

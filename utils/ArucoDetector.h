@@ -19,14 +19,18 @@ class ArucoDetector {
 
     cv::Mat transformationMatrix;
 
-public:
-    ArucoDetector(Type::RobotPose pose, const std::string& calibrationPath, int cameraId = 0, bool headless = false);
+    Team team;
 
-    ArucoDetector(float x, float y, float z, float theta, const std::string& calibrationPath, int cameraId = 0, bool headless = false);
+public:
+    // TODO triée les tag dans la liste en fonction de la distance
+
+    ArucoDetector(Type::RobotPose pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
+
+    ArucoDetector(float x, float y, float z, float theta, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
 
     ~ArucoDetector();
 
-    int detectArucoTags();
+    std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> detectArucoTags();
 
     void readCameraParameters(const std::string& path);
 
@@ -34,6 +38,6 @@ public:
 
     void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix);
 
-    void solarPanelDetector(ArucoTag type, cv::Mat translationMatrix, cv::Mat rotationMatrix);
+    void solarPanelDetector(const ArucoTag& type, cv::Mat translationMatrix, const cv::Mat& rotationMatrix);
 
 };

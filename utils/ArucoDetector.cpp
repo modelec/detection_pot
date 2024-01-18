@@ -1,6 +1,6 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(const Type::RobotPose pose, const std::string& calibrationPath, const int cameraId, const bool headless) : robotPose(pose), headless(headless)
+ArucoDetector::ArucoDetector(const Type::RobotPose pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
     this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
@@ -22,12 +22,17 @@ ArucoDetector::ArucoDetector(const Type::RobotPose pose, const std::string& cali
         cv::namedWindow("ArUco Detection", cv::WINDOW_NORMAL);
     }
 
-    this->addArucoTag(ArucoTag(36, "White flower", 20, FLOWER));
-    this->addArucoTag(ArucoTag(13, "Purple flower", 20, FLOWER));
-    this->addArucoTag(ArucoTag(47, "Solar panel", 20, FLOWER));
+    auto whiteFlower = ArucoTag(36, "White flower", 20, FLOWER);
+    whiteFlower.setFlowerObjectRepresentation();
+    this->addArucoTag(whiteFlower);
+    auto purpleFlower = ArucoTag(13, "Purple flower", 20, FLOWER);
+    purpleFlower.setFlowerObjectRepresentation();
+    this->addArucoTag(purpleFlower);
+
+    this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
 }
 
-ArucoDetector::ArucoDetector(const float x, const float y, const float z, const float theta, const std::string& calibrationPath, const int cameraId, const bool headless) : ArucoDetector(Type::RobotPose{cv::Point3f(x, y, z), theta}, calibrationPath, cameraId, headless)
+ArucoDetector::ArucoDetector(const float x, const float y, const float z, const float theta, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : ArucoDetector(Type::RobotPose{cv::Point3f(x, y, z), theta}, calibrationPath, team, cameraId, headless)
 {
 }
 
@@ -55,14 +60,17 @@ void ArucoDetector::addArucoTag(const ArucoTag& tag)
     this->arucoTags.push_back(tag);
 }
 
-int ArucoDetector::detectArucoTags()
+std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> ArucoDetector::detectArucoTags()
 {
     cv::Mat frame;
     cap >> frame;  // Capture frame from the camera
 
+    std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> result;
+
     if (frame.empty()) {
         std::cerr << "Error capturing frame." << std::endl;
-        return -2;
+        result.first = -2;
+        return result;
     }
 
     cv::Mat gray;
@@ -84,7 +92,8 @@ int ArucoDetector::detectArucoTags()
             cv::aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
         }
 
-        for (size_t i = 0; i < markerCorners.size(); i++) {
+        for (size_t i = 0; i < markerCorners.size(); i++)
+        {
             int id = markerIds[i];
 
             if (std::find_if(arucoTags.begin(), arucoTags.end(), [id](const ArucoTag& tag) { return tag.id == id; }) == arucoTags.end())
@@ -122,6 +131,8 @@ int ArucoDetector::detectArucoTags()
 
             cv::Mat transformedTvec = (transformationMatrix * translat);
 
+            result.second.emplace_back(transformedTvec, rotaEuler);
+
             if (tag.type == FLOWER)
             {
                 flowerDetector(tag, transformedTvec, rotaEuler);
@@ -132,29 +143,59 @@ int ArucoDetector::detectArucoTags()
         }
     }
 
+    std::sort(result.second.begin(), result.second.end(), [](const std::pair<cv::Mat, cv::Mat>& a, const std::pair<cv::Mat, cv::Mat>& b)
+    {
+        return a.first.at<double>(2, 0) < b.first.at<double>(2, 0);
+    });
+
     if (!headless)
     {
         cv::imshow("ArUco Detection", frame);
     }
 
-    if (cv::waitKey(10) == 27)  // Press 'Esc' to exit
-        return 1;
+    if (cv::waitKey(10) == 27)
+    {
+        // Press 'Esc' to exit
+        result.first = 1;
+        return result;
+    }
 
-    return 0;
+    result.first = 0;
+    return result;
 }
 
 void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix)
 {
     constexpr double distanceToPot = 21;
 
-    const double distanceXFlower = translationMatrix.at<double>(0, 0) + (distanceToPot * sin(rotationMatrix.at<double>(1, 0)));
-    const double distanceZFlower = translationMatrix.at<double>(2, 0) + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
+    const double distanceXFlower = translationMatrix.at<double>(0, 0);// + (distanceToPot * sin(rotationMatrix.at<double>(1, 0)));
+    const double distanceZFlower = translationMatrix.at<double>(2, 0);// + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
 
     std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << std::endl;
 }
 
-void ArucoDetector::solarPanelDetector(ArucoTag tag, cv::Mat translationMatrix, cv::Mat rotationMatrix)
+void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix)
 {
     std::cout << tag.name << " Pos : x: " << translationMatrix.at<double>(0, 0) << " z: " << translationMatrix.at<double>(2, 0) << " " << std::endl;
+    const auto yaw = rotationMatrix.at<double>(2, 0);
+
+    const auto rotationBaseTable = (-yaw) + robotPose.theta;
+
+    std::cout << " Rotation: " << rotationBaseTable * (180 / CV_PI) << std::endl;
+
+    if (rotationBaseTable > 70 && rotationBaseTable <= 110)
+    {
+        std::cout << "Mid" << std::endl;
+    }
+    else if (rotationBaseTable > 30 && rotationBaseTable <= 70)
+    {
+        std::cout << "Blue side" << std::endl;
+    }
+    else if (rotationBaseTable > 110 && rotationBaseTable <= 150)
+    {
+        std::cout << "Yellow side" << std::endl;
+    }
+
+    // BLUE => 90, YELLOW => -90
 }
 
