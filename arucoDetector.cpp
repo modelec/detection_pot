@@ -1,5 +1,3 @@
-#include <opencv2/opencv.hpp>
-
 #include "utils/ArucoDetector.h"
 
 int main(int argc, char *argv[])
