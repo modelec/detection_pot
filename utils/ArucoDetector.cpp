@@ -3,8 +3,12 @@
 ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
     // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
-    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
     // this->parameters = cv::aruco::DetectorParameters();
+
+    // 4.6
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
         cos(pose.theta), 0, sin(pose.theta), pose.position.x,

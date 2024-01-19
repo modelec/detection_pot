@@ -1,5 +1,18 @@
 #include "utils/ArucoDetector.h"
 
+#include <iostream>
+#include <thread>
+#include <atomic>
+
+std::atomic<bool> stopRequested(false);
+
+void userInputThread() {
+    // Wait for the user to press Enter
+    std::cout << "Press Enter to stop the program..." << std::endl;
+    std::cin.ignore();
+    stopRequested = true;
+}
+
 int main(int argc, char *argv[])
 {
     // Settup argument parser
@@ -32,6 +45,8 @@ int main(int argc, char *argv[])
 
     // End argument parser
 
+    std::thread userInput(userInputThread);
+
     const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
     ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
@@ -60,7 +75,15 @@ int main(int argc, char *argv[])
                 ArucoDetector::solarPanelDetector(p.first, p.second.first, p.second.first, robotPose);
             }
         }
+
+        if (stopRequested)
+        {
+            break;
+        }
     }
+
+    // Wait for the user input thread to finish
+    userInput.join();
 
     return 0;
 }
