@@ -51,6 +51,17 @@ int main(int argc, char *argv[])
         {
             break;
         }
+
+        for (auto p : res.second)
+        {
+            if (p.first.type == FLOWER)
+            {
+                ArucoDetector::flowerDetector(p.first, p.second.first, p.second.first);
+            } else if (p.first.type == SOLAR_PANEL)
+            {
+                ArucoDetector::solarPanelDetector(p.first, p.second.first, p.second.first, robotPose);
+            }
+        }
     }
 
     return 0;

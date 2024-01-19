@@ -1,8 +1,11 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(const Type::RobotPose pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
+ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
-    this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
+    // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    this->parameters = cv::aruco::DetectorParameters();
+
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
         cos(pose.theta), 0, sin(pose.theta), pose.position.x,
         0, 1, 0, pose.position.y,
@@ -60,12 +63,12 @@ void ArucoDetector::addArucoTag(const ArucoTag& tag)
     this->arucoTags.push_back(tag);
 }
 
-std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> ArucoDetector::detectArucoTags()
+std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> ArucoDetector::detectArucoTags()
 {
     cv::Mat frame;
     cap >> frame;  // Capture frame from the camera
 
-    std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> result;
+    std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
     if (frame.empty()) {
         std::cerr << "Error capturing frame." << std::endl;
@@ -79,10 +82,10 @@ std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> ArucoDetector::detectAr
     std::vector<int> markerIds;
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
-    // cv::aruco::detectMarkers(frame, &dictionary, markerCorners, markerIds, &detectorParams);
+    cv::aruco::detectMarkers(frame, &this->dictionary, markerCorners, markerIds, &parameters);
 
-    // opencv 4.9
-    detector.detectMarkers(frame, markerCorners, markerIds);
+    // opencv 4.8
+    // detector.detectMarkers(frame, markerCorners, markerIds);
 
     if (!markerIds.empty())
     {
@@ -131,21 +134,13 @@ std::pair<int, std::vector<std::pair<cv::Mat, cv::Mat>>> ArucoDetector::detectAr
 
             cv::Mat transformedTvec = (transformationMatrix * translat);
 
-            result.second.emplace_back(transformedTvec, rotaEuler);
-
-            if (tag.type == FLOWER)
-            {
-                flowerDetector(tag, transformedTvec, rotaEuler);
-            } else if (tag.type == SOLAR_PANEL)
-            {
-                solarPanelDetector(tag, transformedTvec, rotaEuler);
-            }
+            result.second.emplace_back(tag, std::make_pair(transformedTvec, rotaEuler));
         }
     }
 
-    std::sort(result.second.begin(), result.second.end(), [](const std::pair<cv::Mat, cv::Mat>& a, const std::pair<cv::Mat, cv::Mat>& b)
+    std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
     {
-        return a.first.at<double>(2, 0) < b.first.at<double>(2, 0);
+        return distanceBetweenRobotAndTag(robotPose, a.second.first) < distanceBetweenRobotAndTag(robotPose, b.second.first);
     });
 
     if (!headless)
@@ -174,7 +169,7 @@ void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translati
     std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << std::endl;
 }
 
-void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix)
+void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
 {
     std::cout << tag.name << " Pos : x: " << translationMatrix.at<double>(0, 0) << " z: " << translationMatrix.at<double>(2, 0) << " " << std::endl;
     const auto yaw = rotationMatrix.at<double>(2, 0);
