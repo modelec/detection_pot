@@ -13,8 +13,8 @@ class ArucoDetector {
 
     cv::VideoCapture cap;
 
-    cv::aruco::Dictionary dictionary;
-    cv::aruco::DetectorParameters parameters;
+    cv::Ptr<cv::aruco::Dictionary> dictionary;
+    // cv::aruco::DetectorParameters parameters;
     // cv::aruco::ArucoDetector detector;
 
     bool headless;

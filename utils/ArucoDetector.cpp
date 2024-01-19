@@ -4,7 +4,7 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
 {
     // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
     this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-    this->parameters = cv::aruco::DetectorParameters();
+    // this->parameters = cv::aruco::DetectorParameters();
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
         cos(pose.theta), 0, sin(pose.theta), pose.position.x,
@@ -82,7 +82,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<int> markerIds;
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
-    cv::aruco::detectMarkers(frame, &this->dictionary, markerCorners, markerIds, &parameters);
+    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
 
     // opencv 4.8
     // detector.detectMarkers(frame, markerCorners, markerIds);
