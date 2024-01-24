@@ -3,12 +3,12 @@
 ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
     // opencv 4.8
-    this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
-    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-    this->parameters = cv::aruco::DetectorParameters();
+    // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
+    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    // this->parameters = cv::aruco::DetectorParameters();
 
     // 4.6
-    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
@@ -73,16 +73,16 @@ void ArucoDetector::addArucoTag(const ArucoTag& tag)
 
 std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> ArucoDetector::detectArucoTags(std::vector<ArucoTag> tags)
 {
-    if (tags.empty())
-    {
-        tags = this->arucoTags;
-    }
-
     if (!started)
     {
         std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
         result.first = -2;
         return result;
+    }
+
+    if (tags.empty())
+    {
+        tags = this->arucoTags;
     }
 
     cv::Mat frame;
@@ -102,10 +102,10 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
     // 4.6
-    // cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
+    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
 
     // opencv 4.8
-    detector.detectMarkers(frame, markerCorners, markerIds);
+    // detector.detectMarkers(frame, markerCorners, markerIds);
 
     if (!markerIds.empty())
     {
@@ -207,6 +207,10 @@ void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationM
     else if (rotationBaseTable > 110 && rotationBaseTable <= 150)
     {
         std::cout << "Yellow side" << std::endl;
+    }
+    else
+    {
+        std::cout << "Mid" << std::endl;
     }
 
     // BLUE => 90, YELLOW => -90

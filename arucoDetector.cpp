@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     auto solarPanel = ArucoTag(47, "Solar panel", 50, SOLAR_PANEL);
 
     while (true) {
-        const auto [code, res] = detector.detectArucoTags({solarPanel});
+        const auto [code, res] = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
 
         if (code == -2)
         {
