@@ -5,6 +5,15 @@
 int main(int argc, char *argv[])
 {
 
+    for (int i = 0; i < argc; i++) {
+        if (std::string(argv[i]) == "--help")
+        {
+            std::cout << "Usage: " << argv[0] << " <directory>" << std::endl;
+            std::cout << "directory: The directory containing the calibration images." << std::endl;
+            return 0;
+        }
+    }
+
     if (argc < 2) {
         std::cout << "Usage: " << argv[0] << " <directory>" << std::endl;
         return 1;

@@ -18,20 +18,29 @@ int main(int argc, char *argv[])
 {
     // Settup argument parser
 
-    if (argc < 3) {
-        std::cout << "Usage: " << argv[0] << " <video capture device> <path/to/calibration_results.yaml>" << std::endl;
-        return 1;
-    }
-
     bool headless = false;
 
     for (int i = 0; i < argc; i++)
     {
+        if (std::string(argv[i]) == "--help")
+        {
+            std::cout << "Usage: " << argv[0] << " <video capture device> <path/to/calibration_results.yaml>" << std::endl;
+            std::cout << "video capture device: The ID of the video capture device to use. Usually 0 for the built-in camera." << std::endl;
+            std::cout << "path/to/calibration_results.yaml: The path to the calibration results file." << std::endl;
+            std::cout << "to run the program in headless mode, add the --headless flag." << std::endl;
+            return 0;
+        }
+
         if (std::string(argv[i]) == "--headless")
         {
             std::cout << "Running in headless mode." << std::endl;
             headless = true;
         }
+    }
+
+    if (argc < 3) {
+        std::cout << "Usage: " << argv[0] << " <video capture device> <path/to/calibration_results.yaml>" << std::endl;
+        return 1;
     }
 
     const int cameraId = std::stoi(argv[1]);
