@@ -2,12 +2,13 @@
 
 ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
-    // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
-    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-    // this->parameters = cv::aruco::DetectorParameters();
+    // opencv 4.8
+    this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    this->parameters = cv::aruco::DetectorParameters();
 
     // 4.6
-    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
@@ -22,6 +23,9 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
 
     if (!cap.isOpened()) {
         std::cerr << "Error opening camera." << std::endl;
+    } else
+    {
+        started = true;
     }
 
     if (!headless)
@@ -67,15 +71,26 @@ void ArucoDetector::addArucoTag(const ArucoTag& tag)
     this->arucoTags.push_back(tag);
 }
 
-std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> ArucoDetector::detectArucoTags()
+std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> ArucoDetector::detectArucoTags(std::vector<ArucoTag> tags)
 {
+    if (tags.empty())
+    {
+        tags = this->arucoTags;
+    }
+
+    if (!started)
+    {
+        std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
+        result.first = -2;
+        return result;
+    }
+
     cv::Mat frame;
     cap >> frame;  // Capture frame from the camera
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
     if (frame.empty()) {
-        std::cerr << "Error capturing frame." << std::endl;
         result.first = -2;
         return result;
     }
@@ -86,14 +101,14 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<int> markerIds;
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
+    // 4.6
+    // cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
 
     // opencv 4.8
-    // detector.detectMarkers(frame, markerCorners, markerIds);
+    detector.detectMarkers(frame, markerCorners, markerIds);
 
     if (!markerIds.empty())
     {
-        std::cout << "Detected " << markerIds.size() << " markers." << std::endl;
         if (!headless)
         {
             cv::aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
@@ -103,12 +118,12 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         {
             int id = markerIds[i];
 
-            if (std::find_if(arucoTags.begin(), arucoTags.end(), [id](const ArucoTag& tag) { return tag.id == id; }) == arucoTags.end())
+            if (std::find_if(tags.begin(), tags.end(), [id](const ArucoTag& tag) { return tag.id == id; }) == tags.end())
             {
                 continue;
             }
 
-            ArucoTag tag = *std::find_if(arucoTags.begin(), arucoTags.end(), [id](const ArucoTag& tag) { return tag.id == id; });
+            ArucoTag tag = *std::find_if(tags.begin(), tags.end(), [id](const ArucoTag& tag) { return tag.id == id; });
 
             cv::Mat rvec, tvec;
 
@@ -150,13 +165,12 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     if (!headless)
     {
         cv::imshow("ArUco Detection", frame);
-    }
-
-    if (cv::waitKey(10) == 27)
-    {
-        // Press 'Esc' to exit
-        result.first = 1;
-        return result;
+        if (cv::waitKey(10) == 27)
+        {
+            // Press 'Esc' to exit
+            result.first = 1;
+            return result;
+        }
     }
 
     result.first = 0;

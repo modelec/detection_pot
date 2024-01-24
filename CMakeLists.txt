@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(detection_pot VERSION 1.0.0)
+project(detection_pot VERSION 1.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -24,10 +24,10 @@ target_link_libraries( calibration ${OpenCV_LIBS} )
 set(arucoDetectionSources
         ${COMMON_SOURCES}
         arucoDetector.cpp
-        utils/ArucoTag.cpp
-        utils/ArucoTag.h
-        utils/ArucoDetector.cpp
-        utils/ArucoDetector.h
+        aruco/ArucoTag.cpp
+        aruco/ArucoTag.h
+        aruco/ArucoDetector.cpp
+        aruco/ArucoDetector.h
 )
 
 add_executable(arucoDetector ${arucoDetectionSources})

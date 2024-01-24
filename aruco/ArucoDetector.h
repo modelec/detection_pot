@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils.h"
+#include "../utils/utils.h"
 #include "ArucoTag.h"
 
 class ArucoDetector {
@@ -14,18 +14,20 @@ class ArucoDetector {
     cv::VideoCapture cap;
 
     // 4.6
-    cv::Ptr<cv::aruco::Dictionary> dictionary;
+    // cv::Ptr<cv::aruco::Dictionary> dictionary;
 
     // 4.8
-    // cv::aruco::Dictionary dictionary;
-    // cv::aruco::DetectorParameters parameters;
-    // cv::aruco::ArucoDetector detector;
+    cv::aruco::Dictionary dictionary;
+    cv::aruco::DetectorParameters parameters;
+    cv::aruco::ArucoDetector detector;
 
     bool headless;
 
     cv::Mat transformationMatrix;
 
     Team team;
+
+    bool started = false;
 
 public:
     ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
@@ -34,7 +36,7 @@ public:
 
     ~ArucoDetector();
 
-    std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> detectArucoTags();
+    std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> detectArucoTags(std::vector<ArucoTag> tags = {});
 
     void readCameraParameters(const std::string& path);
 

@@ -1,8 +1,9 @@
-#include "utils/ArucoDetector.h"
+#include "aruco/ArucoDetector.h"
 
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <optional>
 
 std::atomic<bool> stopRequested(false);
 
@@ -44,35 +45,46 @@ int main(int argc, char *argv[])
     const std::string calibrationPath = argv[2];
 
     // End argument parser
+    std::optional<std::thread> userInput;
 
-    std::thread userInput(userInputThread);
+    if (headless)
+    {
+        userInput = std::thread(userInputThread);
+    }
 
     const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
     ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
 
-    while (true) {
-        const auto res = detector.detectArucoTags();
+    auto whiteFlower = ArucoTag(36, "White flower", 20, FLOWER);
+    whiteFlower.setFlowerObjectRepresentation();
+    auto purpleFlower = ArucoTag(13, "Purple flower", 20, FLOWER);
+    purpleFlower.setFlowerObjectRepresentation();
 
-        if (res.first == -2)
+    auto solarPanel = ArucoTag(47, "Solar panel", 50, SOLAR_PANEL);
+
+    while (true) {
+        const auto [code, res] = detector.detectArucoTags({solarPanel});
+
+        if (code == -2)
         {
             std::cerr << "Error: Could not capture frame." << std::endl;
             return -2;
         }
 
-        if (res.first == 1)
+        if (code == 1)
         {
-            break;
+            stopRequested = true;
         }
 
-        for (auto p : res.second)
+        for (auto [tags, matrix] : res)
         {
-            if (p.first.type == FLOWER)
+            if (tags.type == FLOWER)
             {
-                ArucoDetector::flowerDetector(p.first, p.second.first, p.second.first);
-            } else if (p.first.type == SOLAR_PANEL)
+                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first);
+            } else if (tags.type == SOLAR_PANEL)
             {
-                ArucoDetector::solarPanelDetector(p.first, p.second.first, p.second.first, robotPose);
+                ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
             }
         }
 
@@ -83,7 +95,10 @@ int main(int argc, char *argv[])
     }
 
     // Wait for the user input thread to finish
-    userInput.join();
+    if (userInput.has_value())
+    {
+        userInput.value().join();
+    }
 
     return 0;
 }
