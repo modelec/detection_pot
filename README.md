@@ -18,4 +18,4 @@ Ensuite vous pouvez enfin utilisé le programme de detection de tag, (arucoDetec
 
 Code testé sur opencv 4.8 et utilisé sur opencv 4.6  
 c++ 17  
-cmake 3.27 mini  
+cmake 3.25 mini  
