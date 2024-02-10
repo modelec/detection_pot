@@ -57,9 +57,10 @@ ArucoDetector::ArucoDetector(const float x, const float y, const float z, const 
 
 ArucoDetector::~ArucoDetector()
 {
-    std::cout << "ArucoDetector destructor" << std::endl;
     cam->stopVideo();
     cv::destroyAllWindows();
+
+    delete cam;
 }
 
 
