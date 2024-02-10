@@ -4,7 +4,11 @@ project(detection_pot VERSION 1.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBCAMERA REQUIRED libcamera)
+
+include_directories(${LIBCAMERA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS})
+
 
 set(COMMON_SOURCES
         utils/utils.h
@@ -18,7 +22,7 @@ set(calibrationSources
 
 add_executable(calibration ${calibrationSources})
 
-target_link_libraries( calibration ${OpenCV_LIBS} )
+target_link_libraries( calibration -llccv ${OpenCV_LIBS} )
 
 # Project 2 sources and executable
 set(arucoDetectionSources
@@ -30,6 +34,6 @@ set(arucoDetectionSources
         aruco/ArucoDetector.h
 )
 
-add_executable(arucoDetector ${arucoDetectionSources})
+add_executable(arucoDetector -llccv ${arucoDetectionSources})
 
-target_link_libraries( arucoDetector ${OpenCV_LIBS} )
+target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
