@@ -18,13 +18,17 @@ int main()
 
     cam.startVideo();
 
-    for(int i=0;i<30;i++){
+    int nbPhoto = 20;
+
+    for(int i=0;i<nbPhoto;i++){
         std::cout<<i<<std::endl;
         if (!cam.getVideoFrame(image, 1000)) {
             std::cerr << "Error getting frame from camera." << std::endl;
             return -1;
         } else {
             cv::imwrite("calibration_images/"+std::to_string(i)+".jpg", image);
+
+            sleep(1000);
         }
     }
     cam.stopVideo();
