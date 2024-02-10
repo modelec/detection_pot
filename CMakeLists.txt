@@ -34,6 +34,6 @@ set(arucoDetectionSources
         aruco/ArucoDetector.h
 )
 
-add_executable(arucoDetector -llccv ${arucoDetectionSources})
+add_executable(arucoDetector ${arucoDetectionSources})
 
 target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
