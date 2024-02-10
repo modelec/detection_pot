@@ -27,6 +27,7 @@ int main()
             cv::imwrite("calibration_images/"+std::to_string(i)+".jpg", image);
         }
     }
+    cam.stopVideo();
 
     return 0;
 }
