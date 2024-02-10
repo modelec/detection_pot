@@ -20,7 +20,7 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     this->readCameraParameters(calibrationPath);
 
     // this->cap = cv::VideoCapture(cameraId);
-    this->cam = lccv::PiCamera;
+    this->cam = lccv::PiCamera();
     cam.options->video_width=1920;
     cam.options->video_height=1080;
     cam.options->framerate=60;
