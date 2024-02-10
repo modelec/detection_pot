@@ -15,12 +15,10 @@ set(COMMON_SOURCES
         utils/utils.cpp
 )
 
-set(calibrationSources
+add_executable(calibration
         ${COMMON_SOURCES}
         calibration.cpp
 )
-
-add_executable(calibration ${calibrationSources})
 
 target_link_libraries( calibration -llccv ${OpenCV_LIBS} )
 
@@ -37,3 +35,12 @@ set(arucoDetectionSources
 add_executable(arucoDetector ${arucoDetectionSources})
 
 target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
+
+set(photo
+        ${COMMON_SOURCES}
+        photo.cpp
+)
+
+add_executable(photo ${photo})
+
+target_link_libraries( photo -llccv ${OpenCV_LIBS} )
