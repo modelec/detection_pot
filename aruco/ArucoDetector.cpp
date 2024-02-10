@@ -46,6 +46,8 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     this->addArucoTag(purpleFlower);
 
     this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
+
+    cam.startVideo();
 }
 
 ArucoDetector::ArucoDetector(const float x, const float y, const float z, const float theta, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : ArucoDetector(Type::RobotPose{cv::Point3f(x, y, z), theta}, calibrationPath, team, cameraId, headless)
