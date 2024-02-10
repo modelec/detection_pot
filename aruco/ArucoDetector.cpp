@@ -78,12 +78,12 @@ void ArucoDetector::addArucoTag(const ArucoTag& tag)
 
 std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> ArucoDetector::detectArucoTags(std::vector<ArucoTag> tags)
 {
-    if (!started)
+    /*if (!started)
     {
         std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
         result.first = -2;
         return result;
-    }
+    }*/
 
     if (tags.empty())
     {
