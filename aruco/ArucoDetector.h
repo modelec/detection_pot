@@ -2,6 +2,7 @@
 
 #include "../utils/utils.h"
 #include "ArucoTag.h"
+#include <lccv.hpp>
 
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
@@ -11,7 +12,8 @@ class ArucoDetector {
     cv::Mat cameraMatrix;
     cv::Mat distCoeffs;
 
-    cv::VideoCapture cap;
+    // cv::VideoCapture cap;
+    lccv::PiCamera cam;
 
     // 4.6
     cv::Ptr<cv::aruco::Dictionary> dictionary;

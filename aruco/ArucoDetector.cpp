@@ -19,14 +19,20 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     );
     this->readCameraParameters(calibrationPath);
 
-    this->cap = cv::VideoCapture(cameraId);
+    // this->cap = cv::VideoCapture(cameraId);
+    this->cam = lccv::PiCamera;
+    cam.options->video_width=1920;
+    cam.options->video_height=1080;
+    cam.options->framerate=60;
+    cam.options->verbose=true;
 
-    if (!cap.isOpened()) {
+/*    if (!cap.isOpened()) {
         std::cerr << "Error opening camera." << std::endl;
     } else
     {
         started = true;
-    }
+    }*/
+    started = true;
 
     if (!headless)
     {
@@ -49,7 +55,7 @@ ArucoDetector::ArucoDetector(const float x, const float y, const float z, const 
 
 ArucoDetector::~ArucoDetector()
 {
-    cap.release();
+    cam.stopVideo();
     cv::destroyAllWindows();
 }
 
@@ -86,7 +92,8 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     }
 
     cv::Mat frame;
-    cap >> frame;  // Capture frame from the camera
+    cam.getVideoFrame(frame, 1);
+    // cap >> frame;  // Capture frame from the camera
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
