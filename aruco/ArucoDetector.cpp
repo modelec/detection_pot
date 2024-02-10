@@ -22,7 +22,7 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     // this->cap = cv::VideoCapture(cameraId);
     cam.options->video_width=1920;
     cam.options->video_height=1080;
-    cam.options->framerate=60;
+    cam.options->framerate=30;
     cam.options->verbose=true;
 
 /*    if (!cap.isOpened()) {
