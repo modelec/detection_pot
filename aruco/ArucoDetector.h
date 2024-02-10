@@ -13,7 +13,7 @@ class ArucoDetector {
     cv::Mat distCoeffs;
 
     // cv::VideoCapture cap;
-    lccv::PiCamera* cam;
+    lccv::PiCamera* cam = nullptr;
 
     // 4.6
     cv::Ptr<cv::aruco::Dictionary> dictionary;
