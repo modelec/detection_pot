@@ -26,9 +26,9 @@ int main()
             std::cerr << "Error getting frame from camera." << std::endl;
             return -1;
         } else {
-            cv::imwrite("calibration_images/"+std::to_string(i)+".jpg", image);
+            cv::imwrite("../calibration_images/"+std::to_string(i)+".jpg", image);
 
-            sleep(1000);
+            sleep(100);
         }
     }
     cam.stopVideo();
