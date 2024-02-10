@@ -13,7 +13,7 @@ int main()
     //cam.options->height=3040;
     cam.options->photo_width=1920;
     cam.options->photo_height=1080;
-    cma.options->framerate=10;
+    cam.options->framerate=10;
     cam.options->verbose=true;
 
     cam.startVideo();
