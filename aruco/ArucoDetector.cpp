@@ -91,7 +91,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     }
 
     cv::Mat frame;
-    cam.getVideoFrame(frame, 1);
+    cam.getVideoFrame(frame, 1000);
     // cap >> frame;  // Capture frame from the camera
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
