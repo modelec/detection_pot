@@ -11,18 +11,21 @@ int main()
     lccv::PiCamera cam;
     //cam.options->width=4056;
     //cam.options->height=3040;
-    cam.options->photo_width=2028;
-    cam.options->photo_height=1520;
+    cam.options->photo_width=1920;
+    cam.options->photo_height=1080;
+    cma.options->framerate=10;
     cam.options->verbose=true;
+
+    cam.startVideo();
+
     for(int i=0;i<30;i++){
         std::cout<<i<<std::endl;
-        if(!cam.capturePhoto(image)){
-            std::cout<<"Camera error"<<std::endl;
+        if (!cam.getVideoFrame(image, 1000)) {
+            std::cerr << "Error getting frame from camera." << std::endl;
+            return -1;
+        } else {
+            cv::imwrite("calibration_images/"+std::to_string(i)+".jpg", image);
         }
-
-        cv::imwrite("calibration_images/"+std::to_string(i)+".jpg", image);
-
-        sleep(1000);
     }
 
     return 0;
