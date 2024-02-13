@@ -197,7 +197,7 @@ void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translati
     std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << "distance: " << distanceFlower << std::endl;
     std::string data = std::to_string(distanceXFlower) + ";" + std::to_string(distanceZFlower) + ";" + std::to_string(distanceFlower);
     std::cout << "Data: " << data << std::endl;
-    sendData(serverSocket, data);
+    sendData(data);
 }
 
 void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
