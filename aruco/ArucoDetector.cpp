@@ -186,14 +186,15 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     return result;
 }
 
-void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix)
+void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
 {
     constexpr double distanceToPot = 21;
 
     const double distanceXFlower = translationMatrix.at<double>(0, 0);// + (distanceToPot * sin(rotationMatrix.at<double>(1, 0)));
     const double distanceZFlower = translationMatrix.at<double>(2, 0);// + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
+    const double distanceFlower = distanceBetweenRobotAndTag(robotPose, translationMatrix);
 
-    std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << std::endl;
+    std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << "distance: " << distanceFlower << std::endl;
 }
 
 void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)

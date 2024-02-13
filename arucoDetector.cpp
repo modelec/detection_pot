@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
         {
             if (tags.type == FLOWER)
             {
-                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first);
+                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
             } else if (tags.type == SOLAR_PANEL)
             {
                 ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
