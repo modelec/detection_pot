@@ -225,4 +225,3 @@ void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationM
 
     // BLUE => 90, YELLOW => -90
 }
-

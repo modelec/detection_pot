@@ -30,6 +30,8 @@ set(arucoDetectionSources
         aruco/ArucoTag.h
         aruco/ArucoDetector.cpp
         aruco/ArucoDetector.h
+        main.cpp
+        client.cpp
 )
 
 add_executable(arucoDetector ${arucoDetectionSources})
