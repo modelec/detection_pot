@@ -3,6 +3,9 @@
 #include "../utils/utils.h"
 #include "ArucoTag.h"
 #include <lccv.hpp>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
@@ -44,8 +47,17 @@ public:
 
     void addArucoTag(const ArucoTag& tag);
 
-    static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose);
+    static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose, int serverSocket);
 
     static void solarPanelDetector(const ArucoTag& type, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose);
 
+    //Start the socket server
+    static int startServer();
+
+    static void stopServer(int serverSocket);
+
+    //Receive the data from the client
+    static void sendData(int serverSocket, const std::string& data);
+
 };
+

@@ -61,6 +61,9 @@ int main(int argc, char *argv[])
         userInput = std::thread(userInputThread);
     }
 
+    //Start the serverSocket
+    int serverSocket = ArucoDetector::startServer();
+
     const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
     ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
@@ -90,7 +93,7 @@ int main(int argc, char *argv[])
         {
             if (tags.type == FLOWER)
             {
-                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
+                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose, serverSocket);
             } else if (tags.type == SOLAR_PANEL)
             {
                 ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);

@@ -186,7 +186,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     return result;
 }
 
-void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
+void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose, int serverSocket)
 {
     constexpr double distanceToPot = 21;
 
@@ -195,6 +195,9 @@ void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translati
     const double distanceFlower = distanceBetweenRobotAndTag(robotPose, translationMatrix);
 
     std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << "distance: " << distanceFlower << std::endl;
+    std::string data = std::to_string(distanceXFlower) + ";" + std::to_string(distanceZFlower) + ";" + std::to_string(distanceFlower);
+    std::cout << "Data: " << data << std::endl;
+    sendData(serverSocket, data);
 }
 
 void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
@@ -225,3 +228,29 @@ void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationM
 
     // BLUE => 90, YELLOW => -90
 }
+
+int ArucoDetector::startServer() {
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverSocket == -1) {
+        std::cerr << "Error: Could not create socket." << std::endl;
+        return -1;
+    }
+    sockaddr_in serverAddress{};
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(8080);
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
+    listen(serverSocket, 5);
+    return serverSocket;
+}
+
+void ArucoDetector::stopServer(int serverSocket) {
+    close(serverSocket);
+}
+
+void ArucoDetector::sendData(int serverSocket, const std::string& data) {
+    int clientSocket = accept(serverSocket, nullptr, nullptr);
+    send(clientSocket, data.c_str(), data.size(), 0);
+    close(clientSocket);
+}
+
