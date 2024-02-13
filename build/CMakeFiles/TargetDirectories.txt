@@ -1,5 +1,0 @@
-/mnt/win/Users/BreizhHardware/Nextcloud/Programation/C++/Modelec/detection_pot/build/CMakeFiles/calibration.dir
-/mnt/win/Users/BreizhHardware/Nextcloud/Programation/C++/Modelec/detection_pot/build/CMakeFiles/arucoDetector.dir
-/mnt/win/Users/BreizhHardware/Nextcloud/Programation/C++/Modelec/detection_pot/build/CMakeFiles/photo.dir
-/mnt/win/Users/BreizhHardware/Nextcloud/Programation/C++/Modelec/detection_pot/build/CMakeFiles/edit_cache.dir
-/mnt/win/Users/BreizhHardware/Nextcloud/Programation/C++/Modelec/detection_pot/build/CMakeFiles/rebuild_cache.dir
