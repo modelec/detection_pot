@@ -248,9 +248,30 @@ void ArucoDetector::stopServer(int serverSocket) {
     close(serverSocket);
 }
 
+void ArucoDetector::setNonBlocking(int sockfd) {
+    int flags = fcntl(sockfd, F_GETFL, 0);
+    if (flags == -1) {
+        // Handle error
+        perror("fcntl F_GETFL");
+        return;
+    }
+    if (fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) == -1) {
+        // Handle error
+        perror("fcntl F_SETFL O_NONBLOCK");
+        return;
+    }
+}
+
 void ArucoDetector::sendData(int serverSocket, const std::string& data) {
     int clientSocket = accept(serverSocket, nullptr, nullptr);
-    send(clientSocket, data.c_str(), data.size(), 0);
-    close(clientSocket);
+    if(clientSocket == -1 && errno != EWOULDBLOCK && != EAGAIN) {
+        perror("accept");
+        return;
+    }
+    if(clientSocket != -1) {
+        setNonBlocking(clientSocket);
+        send(clientSocket, data.c_str(), data.size(), 0);
+        close(clientSocket);
+    }
 }
 

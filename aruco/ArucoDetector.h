@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
@@ -55,6 +56,8 @@ public:
     static int startServer();
 
     static void stopServer(int serverSocket);
+
+    static void setNonBlocking(int sockfd);
 
     //Receive the data from the client
     static void sendData(int serverSocket, const std::string& data);
