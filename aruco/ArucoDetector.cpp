@@ -266,21 +266,35 @@ void ArucoDetector::setNonBlocking(int sockfd) {
 
 void ArucoDetector::sendData(int serverSocket, const std::string& data) {
     std::cout << "Sending Data" << std::endl;
-    int clientSocket = accept(serverSocket, nullptr, nullptr);
-    std::cout << "Client Socket: " << clientSocket << std::endl;
-    if(clientSocket == -1 && errno != EWOULDBLOCK && errno != EAGAIN) {
-        perror("accept");
-        return;
-    }
-    if(clientSocket != -1) {
-        setNonBlocking(clientSocket);
-        if(fcntl(clientSocket, F_GETFL) & O_NONBLOCK) {
-            std::cout << "Socket is non-blocking" << std::endl;
+
+    while (true) {
+        int clientSocket = accept(serverSocket, nullptr, nullptr);
+        if (clientSocket == -1) {
+            if (errno == EWOULDBLOCK || errno == EAGAIN) {
+                // Aucune connexion en attente, sortir de la boucle
+                break;
+            } else {
+                // Erreur inattendue lors de l'acceptation de la connexion
+                perror("accept");
+                return;
+            }
         }
-        else {
+
+        std::cout << "Client Socket: " << clientSocket << std::endl;
+
+        setNonBlocking(clientSocket);
+
+        // Vérifiez si le socket est réellement non bloquant
+        if (fcntl(clientSocket, F_GETFL) & O_NONBLOCK) {
+            std::cout << "Socket is non-blocking" << std::endl;
+        } else {
             std::cout << "Socket is still blocking" << std::endl;
         }
+
+        // Envoyer des données au client
         send(clientSocket, data.c_str(), data.size(), 0);
+
+        // Fermer le socket client
         close(clientSocket);
     }
 }
