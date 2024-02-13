@@ -276,6 +276,9 @@ void ArucoDetector::sendData(int serverSocket, const std::string& data) {
         if(fcntl(clientSocket, F_GETFL) & O_NONBLOCK) {
             std::cout << "Socket is non-blocking" << std::endl;
         }
+        else {
+            std::cout << "Socket is still blocking" << std::endl;
+        }
         send(clientSocket, data.c_str(), data.size(), 0);
         close(clientSocket);
     }
