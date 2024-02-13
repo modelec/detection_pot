@@ -264,7 +264,7 @@ void ArucoDetector::setNonBlocking(int sockfd) {
 
 void ArucoDetector::sendData(int serverSocket, const std::string& data) {
     int clientSocket = accept(serverSocket, nullptr, nullptr);
-    if(clientSocket == -1 && errno != EWOULDBLOCK && != EAGAIN) {
+    if(clientSocket == -1 && errno != EWOULDBLOCK && errno != EAGAIN) {
         perror("accept");
         return;
     }
