@@ -241,6 +241,7 @@ int ArucoDetector::startServer() {
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
     listen(serverSocket, 5);
+    std::cout << "serverSocket Origin: " << serverSocket << std::endl;
     return serverSocket;
 }
 
