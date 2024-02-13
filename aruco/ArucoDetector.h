@@ -60,7 +60,7 @@ public:
     static void setNonBlocking(int sockfd);
 
     //Receive the data from the client
-    static void sendData(int serverSocket, const std::string& data);
+    static void sendData(const std::string& data);
 
 };
 

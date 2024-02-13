@@ -265,25 +265,15 @@ void ArucoDetector::setNonBlocking(int sockfd) {
     }
 }
 
-void ArucoDetector::sendData(int serverSocket, const std::string& data) {
-    std::cout << "Sending Data" << std::endl;
-    std::cout << serverSocket << std::endl;
-    int clientSocket = accept(serverSocket, nullptr, nullptr);
-    std::cout << "Client Socket: " << clientSocket << std::endl;
-    if(clientSocket == -1 && errno != EWOULDBLOCK && errno != EAGAIN) {
-        perror("accept");
-        return;
-    }
-    if(clientSocket != -1) {
-        setNonBlocking(clientSocket);
-        if(fcntl(clientSocket, F_GETFL) & O_NONBLOCK) {
-            std::cout << "Socket is non-blocking" << std::endl;
-        }
-        else {
-            std::cout << "Socket is still blocking" << std::endl;
-        }
-        send(clientSocket, data.c_str(), data.size(), 0);
-        close(clientSocket);
-    }
+void ArucoDetector::sendData(const std::string& data) {
+    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    sockaddr_in serverAddress{};
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(8080);
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
+    send(clientSocket, data.c_str(), data.size(), 0);
+    close(clientSocket);
+    return;
 }
 
