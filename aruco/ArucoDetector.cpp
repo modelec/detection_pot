@@ -252,11 +252,13 @@ void ArucoDetector::setNonBlocking(int sockfd) {
     int flags = fcntl(sockfd, F_GETFL, 0);
     if (flags == -1) {
         // Handle error
+        std::cout << "Error: Could not set socket to non-blocking." << std::endl;
         perror("fcntl F_GETFL");
         return;
     }
     if (fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) == -1) {
         // Handle error
+        std::cout << "Error: Could not set socket to non-blocking." << std::endl;
         perror("fcntl F_SETFL O_NONBLOCK");
         return;
     }
