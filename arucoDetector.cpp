@@ -1,7 +1,6 @@
 #include "aruco/ArucoDetector.h"
 #include "tcp/MyClient.h"
 
-#include <QCoreApplication>
 #include <iostream>
 #include <thread>
 #include <atomic>
@@ -19,7 +18,6 @@ void userInputThread() {
 int main(int argc, char *argv[])
 {
     // Settup argument parser
-    QCoreApplication app(argc, argv);
 
     bool headless = false;
 
@@ -84,7 +82,6 @@ int main(int argc, char *argv[])
     client.sendMessage("request robotPose\n");
 
     while (true) {
-
         auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
 
         code = r.first;
@@ -108,40 +105,10 @@ int main(int argc, char *argv[])
         {
             if (tags.type == FLOWER)
             {
-                constexpr double distanceToPot = 21;
-
-                const double distanceXFlower = matrix.first.at<double>(0, 0);// + (distanceToPot * sin(rotationMatrix.at<double>(1, 0)));
-                const double distanceZFlower = matrix.first.at<double>(2, 0);// + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
-
-                //std::cout << tags.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << std::endl;
-
+                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
             } else if (tags.type == SOLAR_PANEL)
             {
-                std::cout << tags.name << " Pos : x: " << matrix.first.at<double>(0, 0) << " z: " << matrix.first.at<double>(2, 0) << " " << std::endl;
-                const auto yaw = matrix.second.at<double>(2, 0);
-
-                const auto rotationBaseTable = (-yaw) + robotPose->theta;
-
-                std::cout << " Rotation: " << rotationBaseTable * (180 / CV_PI) << std::endl;
-
-                if (rotationBaseTable > 70 && rotationBaseTable <= 110)
-                {
-                    std::cout << "Mid" << std::endl;
-                }
-                else if (rotationBaseTable > 30 && rotationBaseTable <= 70)
-                {
-                    std::cout << "Blue side" << std::endl;
-                }
-                else if (rotationBaseTable > 110 && rotationBaseTable <= 150)
-                {
-                    std::cout << "Yellow side" << std::endl;
-                }
-                else
-                {
-                    std::cout << "Mid" << std::endl;
-                }
-
-                // BLUE => 90, YELLOW => -90
+                ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
             }
         }
 
@@ -157,5 +124,5 @@ int main(int argc, char *argv[])
         userInput.value().join();
     }
 
-    return QCoreApplication::exec();
+    return 0;
 }
