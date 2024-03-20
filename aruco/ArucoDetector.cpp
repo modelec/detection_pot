@@ -13,7 +13,7 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
         cos(pose->theta), 0, sin(pose->theta), pose->position.x,
-        0, 1, 0, pose.position.y,
+        0, 1, 0, pose->position.y,
         -sin(pose->theta), 0, cos(pose->theta), pose->position.z,
         0, 0, 0, 1
     );
@@ -182,7 +182,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     return result;
 }
 
-void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
+/*void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
 {
     constexpr double distanceToPot = 21;
 
@@ -221,4 +221,4 @@ void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationM
 
     // BLUE => 90, YELLOW => -90
 }
-
+*/

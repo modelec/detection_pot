@@ -41,9 +41,9 @@ public:
     void readCameraParameters(const std::string& path);
 
     void addArucoTag(const ArucoTag& tag);
-
+/*
     static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose);
 
     static void solarPanelDetector(const ArucoTag& type, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose);
-
+*/
 };
