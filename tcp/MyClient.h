@@ -12,9 +12,9 @@ std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>> arucoTags;
 
 public:
 
-    virtual ~MyClient();
+    ~MyClient() override;
 
-    MyClient(Type::RobotPose* robotPose, const char* ip = "127.0.0.1", int port = 8080);
+    explicit MyClient(Type::RobotPose* robotPose, const char* ip = "127.0.0.1", int port = 8080);
 
     void handleMessage(const std::string& message) override;
 
