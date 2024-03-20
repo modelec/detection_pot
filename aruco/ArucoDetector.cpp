@@ -182,7 +182,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     return result;
 }
 
-void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
+void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
 {
     constexpr double distanceToPot = 21;
 
@@ -190,15 +190,15 @@ void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translati
     const double distanceZFlower = translationMatrix.at<double>(2, 0);// + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
     const double distanceFlower = distanceBetweenRobotAndTag(robotPose, translationMatrix);
 
-    std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << "distance: " << distanceFlower << std::endl;
+    //std::cout << tag.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << "distance: " << distanceFlower << std::endl;
 }
 
-void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose)
+void ArucoDetector::solarPanelDetector(const ArucoTag& tag, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
 {
     std::cout << tag.name << " Pos : x: " << translationMatrix.at<double>(0, 0) << " z: " << translationMatrix.at<double>(2, 0) << " " << std::endl;
     const auto yaw = rotationMatrix.at<double>(2, 0);
 
-    const auto rotationBaseTable = (-yaw) + robotPose.theta;
+    const auto rotationBaseTable = (-yaw) + robotPose->theta;
 
     std::cout << " Rotation: " << rotationBaseTable * (180 / CV_PI) << std::endl;
 
