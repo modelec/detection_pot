@@ -1,7 +1,7 @@
 #pragma once
 
 #include <TCPSocket/TCPClient.hpp>
-#include <TCPSocket/utils.hpp>
+#include <TCPSocket/TCPUtils.hpp>
 
 #include "../utils/utils.h"
 #include "../aruco/ArucoTag.h"
