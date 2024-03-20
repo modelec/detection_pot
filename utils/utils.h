@@ -24,4 +24,4 @@ enum Team
     YELLOW
 };
 
-double distanceBetweenRobotAndTag(Type::RobotPose robotPose, const cv::Mat& a);
+double distanceBetweenRobotAndTag(const Type::RobotPose& robotPose, const cv::Mat& a);
