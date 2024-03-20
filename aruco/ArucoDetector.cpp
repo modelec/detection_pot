@@ -1,6 +1,6 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
+ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
     // opencv 4.8
     // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
@@ -12,9 +12,9 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(pose.theta), 0, sin(pose.theta), pose.position.x,
+        cos(pose->theta), 0, sin(pose->theta), pose->position.x,
         0, 1, 0, pose.position.y,
-        -sin(pose.theta), 0, cos(pose.theta), pose.position.z,
+        -sin(pose->theta), 0, cos(pose->theta), pose->position.z,
         0, 0, 0, 1
     );
     this->readCameraParameters(calibrationPath);
@@ -49,10 +49,6 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
 
     cam->startVideo();
-}
-
-ArucoDetector::ArucoDetector(const float x, const float y, const float z, const float theta, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : ArucoDetector(Type::RobotPose{cv::Point3f(x, y, z), theta}, calibrationPath, team, cameraId, headless)
-{
 }
 
 ArucoDetector::~ArucoDetector()

@@ -7,7 +7,7 @@
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
 
-    Type::RobotPose robotPose;
+    Type::RobotPose* robotPose;
 
     cv::Mat cameraMatrix;
     cv::Mat distCoeffs;
@@ -33,8 +33,6 @@ class ArucoDetector {
 
 public:
     ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
-
-    ArucoDetector(float x, float y, float z, float theta, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
 
     ~ArucoDetector();
 

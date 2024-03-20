@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package( OpenCV REQUIRED )
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCAMERA REQUIRED libcamera)
+pkg_check_modules(TCPSocket REQUIRED TCPSocket)
 
 include_directories(${LIBCAMERA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS})
 
@@ -30,11 +31,15 @@ set(arucoDetectionSources
         aruco/ArucoTag.h
         aruco/ArucoDetector.cpp
         aruco/ArucoDetector.h
+        tcp/MyClient.cpp
+        tcp/MyClient.h
 )
 
 add_executable(arucoDetector ${arucoDetectionSources})
 
 target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
+
+target_link_libraries( arucoDetector TCPSocket )
 
 set(photo
         ${COMMON_SOURCES}
