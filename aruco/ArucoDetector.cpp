@@ -164,7 +164,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
     std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
     {
-        return distanceBetweenRobotAndTag(robotPose, a.second.first) < distanceBetweenRobotAndTag(robotPose, b.second.first);
+        return distanceBetweenRobotAndTag(*robotPose, a.second.first) < distanceBetweenRobotAndTag(*robotPose, b.second.first);
     });
 
     if (!headless)
