@@ -32,7 +32,7 @@ class ArucoDetector {
     bool started = false;
 
 public:
-    ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
+    ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
 
     ~ArucoDetector();
 
