@@ -20,10 +20,11 @@ void MyClient::handleMessage(const std::string& message)
 
         if (arucoTags.empty())
         {
-            res = "No Aruco Tags Found";
+            res += "404";
         } else {
             for (auto& [tag, pos] : arucoTags)
             {
+
                 res += std::to_string(tag.id) + " ";
                 res += std::to_string(pos.first.at<double>(0, 0)) + " ";
                 res += std::to_string(pos.first.at<double>(1, 0)) + " ";
