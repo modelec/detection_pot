@@ -12,8 +12,6 @@ MyClient::MyClient(Type::RobotPose* robotPose, const char* ip, const int port) :
 
 void MyClient::handleMessage(const std::string& message)
 {
-    std::cout << "Message From My Client" << std::endl;
-    std::cout << message << std::endl;
     if (startWith(message, "request aruco"))
     {
         std::string res;
