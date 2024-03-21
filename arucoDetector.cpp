@@ -88,8 +88,6 @@ int main(int argc, char *argv[])
 
         client.setArucoTags(r.second);
 
-        std::cout << robotPose->position << std::endl;
-
         if (code == -2)
         {
             std::cerr << "Error: Could not capture frame." << std::endl;
