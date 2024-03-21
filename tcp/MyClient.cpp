@@ -18,9 +18,14 @@ void MyClient::handleMessage(const std::string& message)
     {
         std::string res;
 
-        for (auto& [tag, pos] : arucoTags)
+        if (arucoTags.empty())
         {
-            res += std::to_string(tag.id) + " ";
+            res = "No Aruco Tags Found";
+        } else {
+            for (auto& [tag, pos] : arucoTags)
+            {
+                res += std::to_string(tag.id) + " ";
+            }
         }
 
         this->sendMessage(res.c_str());
