@@ -25,9 +25,9 @@ void MyClient::handleMessage(const std::string& message)
             for (auto& [tag, pos] : arucoTags)
             {
                 res += std::to_string(tag.id) + " ";
-                res += std::to_string(pos.first.at<float>(0, 0)) + " ";
-                res += std::to_string(pos.first.at<float>(1, 0)) + " ";
-                res += std::to_string(pos.first.at<float>(2, 0)) + " ";
+                res += std::to_string(pos.first.at<double>(0, 0)) + " ";
+                res += std::to_string(pos.first.at<double>(1, 0)) + " ";
+                res += std::to_string(pos.first.at<double>(2, 0)) + " ";
             }
         }
 
