@@ -6,7 +6,7 @@
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
 
-    Type::RobotPose robotPose;
+    Type::RobotPose* robotPose;
 
     cv::Mat cameraMatrix;
     cv::Mat distCoeffs;
@@ -14,12 +14,12 @@ class ArucoDetector {
     cv::VideoCapture cap;
 
     // 4.6
-    cv::Ptr<cv::aruco::Dictionary> dictionary;
+    // cv::Ptr<cv::aruco::Dictionary> dictionary;
 
     // 4.8
-    // cv::aruco::Dictionary dictionary;
-    // cv::aruco::DetectorParameters parameters;
-    // cv::aruco::ArucoDetector detector;
+    cv::aruco::Dictionary dictionary;
+    cv::aruco::DetectorParameters parameters;
+    cv::aruco::ArucoDetector detector;
 
     bool headless;
 
@@ -30,9 +30,7 @@ class ArucoDetector {
     bool started = false;
 
 public:
-    ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
-
-    ArucoDetector(float x, float y, float z, float theta, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
+    ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, Team team, int cameraId = 0, bool headless = false);
 
     ~ArucoDetector();
 
@@ -45,5 +43,4 @@ public:
     static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix);
 
     static void solarPanelDetector(const ArucoTag& type, cv::Mat translationMatrix, const cv::Mat& rotationMatrix, const Type::RobotPose& robotPose);
-
 };

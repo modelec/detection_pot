@@ -1,5 +1,7 @@
 #include "aruco/ArucoDetector.h"
+#include "tcp/MyClient.h"
 
+#include <QCoreApplication>
 #include <iostream>
 #include <thread>
 #include <atomic>
@@ -17,6 +19,7 @@ void userInputThread() {
 int main(int argc, char *argv[])
 {
     // Settup argument parser
+    QCoreApplication app(argc, argv);
 
     bool headless = false;
 
@@ -61,19 +64,32 @@ int main(int argc, char *argv[])
         userInput = std::thread(userInputThread);
     }
 
-    const auto robotPose = Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
+    auto* robotPose = new Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
     ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
 
-    auto whiteFlower = ArucoTag(36, "White flower", 20, FLOWER);
-    whiteFlower.setFlowerObjectRepresentation();
-    auto purpleFlower = ArucoTag(13, "Purple flower", 20, FLOWER);
-    purpleFlower.setFlowerObjectRepresentation();
+    auto whiteFlower = ArucoTag(36, "White_flower", 20, FLOWER);
+    //whiteFlower.setFlowerObjectRepresentation();
+    auto purpleFlower = ArucoTag(13, "Purple_flower", 20, FLOWER);
+    //purpleFlower.setFlowerObjectRepresentation();
 
-    auto solarPanel = ArucoTag(47, "Solar panel", 50, SOLAR_PANEL);
+    auto solarPanel = ArucoTag(47, "Solar_panel", 50, SOLAR_PANEL);
+
+    int code;
+
+    MyClient client(robotPose, "127.0.0.1", 8080);
+
+    client.start();
+
+    client.sendMessage("request robotPose");
 
     while (true) {
-        const auto [code, res] = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
+
+        auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
+
+        code = r.first;
+
+        client.setArucoTags(r.second);
 
         if (code == -2)
         {
@@ -86,14 +102,44 @@ int main(int argc, char *argv[])
             stopRequested = true;
         }
 
-        for (auto [tags, matrix] : res)
+        for (auto [tags, matrix] : r.second)
         {
             if (tags.type == FLOWER)
             {
-                ArucoDetector::flowerDetector(tags, matrix.first, matrix.first);
+                constexpr double distanceToPot = 21;
+
+                const double distanceXFlower = matrix.first.at<double>(0, 0);// + (distanceToPot * sin(rotationMatrix.at<double>(1, 0)));
+                const double distanceZFlower = matrix.first.at<double>(2, 0);// + (distanceToPot * cos(rotationMatrix.at<double>(1, 0)));
+
+                //std::cout << tags.name << " Pos : x: " << distanceXFlower << " z: " << distanceZFlower << " " << std::endl;
+
             } else if (tags.type == SOLAR_PANEL)
             {
-                ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
+                std::cout << tags.name << " Pos : x: " << matrix.first.at<double>(0, 0) << " z: " << matrix.first.at<double>(2, 0) << " " << std::endl;
+                const auto yaw = matrix.second.at<double>(2, 0);
+
+                const auto rotationBaseTable = (-yaw) + robotPose->theta;
+
+                std::cout << " Rotation: " << rotationBaseTable * (180 / CV_PI) << std::endl;
+
+                if (rotationBaseTable > 70 && rotationBaseTable <= 110)
+                {
+                    std::cout << "Mid" << std::endl;
+                }
+                else if (rotationBaseTable > 30 && rotationBaseTable <= 70)
+                {
+                    std::cout << "Blue side" << std::endl;
+                }
+                else if (rotationBaseTable > 110 && rotationBaseTable <= 150)
+                {
+                    std::cout << "Yellow side" << std::endl;
+                }
+                else
+                {
+                    std::cout << "Mid" << std::endl;
+                }
+
+                // BLUE => 90, YELLOW => -90
             }
         }
 
@@ -109,5 +155,5 @@ int main(int argc, char *argv[])
         userInput.value().join();
     }
 
-    return 0;
+    return QCoreApplication::exec();
 }

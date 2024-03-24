@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     }
 
     // Set the chessboard size (number of inner corners in width and height)
-    cv::Size chessboardSize(9, 6);
+    cv::Size chessboardSize(6, 9);
 
     cv::Size imgSize;
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         if (findChessboardCorners(gray, chessboardSize, corners)) {
             // Refine corner locations
             cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1),
-                             cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1));
+                             cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.001));
 
             // Store object and image points
             objectPoints.push_back(worldPoints);

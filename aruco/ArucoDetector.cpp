@@ -1,20 +1,21 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
+ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
+
     // opencv 4.8
-    // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
-    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
-    // this->parameters = cv::aruco::DetectorParameters();
+    this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    this->parameters = cv::aruco::DetectorParameters();
 
     // 4.6
-    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    // this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(pose.theta), 0, sin(pose.theta), pose.position.x,
-        0, 1, 0, pose.position.y,
-        -sin(pose.theta), 0, cos(pose.theta), pose.position.z,
+        cos(pose->theta), 0, sin(pose->theta), pose->position.x,
+        0, 1, 0, pose->position.y,
+        -sin(pose->theta), 0, cos(pose->theta), pose->position.z,
         0, 0, 0, 1
     );
     this->readCameraParameters(calibrationPath);
@@ -41,10 +42,6 @@ ArucoDetector::ArucoDetector(const Type::RobotPose& pose, const std::string& cal
     this->addArucoTag(purpleFlower);
 
     this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
-}
-
-ArucoDetector::ArucoDetector(const float x, const float y, const float z, const float theta, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : ArucoDetector(Type::RobotPose{cv::Point3f(x, y, z), theta}, calibrationPath, team, cameraId, headless)
-{
 }
 
 ArucoDetector::~ArucoDetector()
@@ -102,10 +99,10 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
     // 4.6
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
+    // cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
 
     // opencv 4.8
-    // detector.detectMarkers(frame, markerCorners, markerIds);
+    detector.detectMarkers(frame, markerCorners, markerIds);
 
     if (!markerIds.empty())
     {
@@ -127,7 +124,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
             cv::Mat rvec, tvec;
 
-            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec);
+            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, cv::SOLVEPNP_IPPE_SQUARE);
 
             if (!headless)
             {
@@ -159,7 +156,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
     std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
     {
-        return distanceBetweenRobotAndTag(robotPose, a.second.first) < distanceBetweenRobotAndTag(robotPose, b.second.first);
+        return distanceBetweenRobotAndTag(*robotPose, a.second.first) < distanceBetweenRobotAndTag(*robotPose, b.second.first);
     });
 
     if (!headless)
