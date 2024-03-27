@@ -1,6 +1,6 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, const Team team, const int cameraId, const bool headless) : robotPose(pose), headless(headless), team(team)
+ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, const Team team, const bool headless) : robotPose(pose), headless(headless), team(team)
 {
     // opencv 4.8
     // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
@@ -19,19 +19,12 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
     );
     this->readCameraParameters(calibrationPath);
 
-    // this->cap = cv::VideoCapture(cameraId);
     this->cam = new lccv::PiCamera;
     cam->options->video_width=1920;
     cam->options->video_height=1080;
     cam->options->framerate=10;
     cam->options->verbose=true;
 
-/*    if (!cap.isOpened()) {
-        std::cerr << "Error opening camera." << std::endl;
-    } else
-    {
-        started = true;
-    }*/
     started = true;
 
     if (!headless)

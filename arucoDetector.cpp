@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     {
         if (std::string(argv[i]) == "--help")
         {
-            std::cout << "Usage: " << argv[0] << " <video capture device> <path/to/calibration_results.yaml>" << std::endl;
+            std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <TCP port>" << std::endl;
             std::cout << "video capture device: The ID of the video capture device to use. Usually 0 for the built-in camera." << std::endl;
             std::cout << "path/to/calibration_results.yaml: The path to the calibration results file." << std::endl;
             std::cout << "to run the program in headless mode, add the --headless flag." << std::endl;
@@ -40,19 +40,11 @@ int main(int argc, char *argv[])
     }
 
     if (argc < 3) {
-        std::cout << "Usage: " << argv[0] << " <video capture device> <path/to/calibration_results.yaml>" << std::endl;
+        std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <port>" << std::endl;
         return 1;
     }
 
-    const int cameraId = std::stoi(argv[1]);
-
-    if (cameraId < 0)
-    {
-        std::cerr << "Error: Camera ID must be a positive integer." << std::endl;
-        return -1;
-    }
-
-    const std::string calibrationPath = argv[2];
+    const std::string calibrationPath = argv[1];
 
     // End argument parser
     std::optional<std::thread> userInput;
@@ -64,7 +56,7 @@ int main(int argc, char *argv[])
 
     auto* robotPose = new Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
 
-    ArucoDetector detector(robotPose, calibrationPath, BLUE, cameraId, headless);
+    ArucoDetector detector(robotPose, calibrationPath, BLUE, headless);
 
     auto whiteFlower = ArucoTag(36, "White_flower", 20, FLOWER);
     //whiteFlower.setFlowerObjectRepresentation();
@@ -75,7 +67,9 @@ int main(int argc, char *argv[])
 
     int code;
 
-    MyClient client(robotPose, "127.0.0.1", 8080);
+    int port = std::stoi(argv[2]);
+
+    MyClient client(robotPose, "127.0.0.1", port);
 
     client.start();
 
