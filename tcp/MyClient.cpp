@@ -14,7 +14,7 @@ void MyClient::handleMessage(const std::string& message)
 {
     std::vector<std::string> messageSplited = split(message, ";");
 
-    if (messageSplited[0] == "aruco" || messageSplited[0] == "all")
+    if (messageSplited[1] == "aruco" || messageSplited[1] == "all")
     {
         if (messageSplited[2] == "get aruco")
         {
