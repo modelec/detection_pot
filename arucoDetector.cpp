@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
     client.start();
 
-    client.sendMessage("request robotPose\n");
+    client.sendMessage("aruco;strat;get robot_pose;0");
 
     while (true) {
         auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
