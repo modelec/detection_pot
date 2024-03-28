@@ -73,6 +73,10 @@ int main(int argc, char *argv[])
 
     client.start();
 
+    client.sendMessage("aruco;strat;ready;1");
+
+    sleep(1);
+
     client.sendMessage("aruco;strat;get robot_pose;0");
 
     while (true) {
