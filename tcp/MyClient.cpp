@@ -1,18 +1,18 @@
 #include "MyClient.h"
 
-MyClient::~MyClient()
-{
-    this->stop();
-}
-
 MyClient::MyClient(Type::RobotPose* robotPose, const char* ip, const int port) : TCPClient(ip, port), robotPose(robotPose)
 {
 
 }
 
+MyClient::~MyClient()
+{
+    this->stop();
+}
+
 void MyClient::handleMessage(const std::string& message)
 {
-    std::vector<std::string> messageSplited = split(message, ";");
+    std::vector<std::string> messageSplited = TCPSocket::split(message, ";");
 
     if (messageSplited[1] == "aruco" || messageSplited[1] == "all")
     {
@@ -39,11 +39,11 @@ void MyClient::handleMessage(const std::string& message)
             this->sendMessage(res.c_str());
         } else if (messageSplited[2] == "ping")
         {
-            this->sendMessage("aruco;strat;pong;1");
+            this->sendMessage("aruco;ihm;pong;1");
         } else if (messageSplited[2] == "set robot_pos")
         {
             // cut the string with space and take the first, second, third and fourth element
-            std::vector<std::string> tokens = split(message, " ");
+            std::vector<std::string> tokens = TCPSocket::split(message, " ");
 
             robotPose->position.x = std::stof(tokens[1]);
             robotPose->position.y = std::stof(tokens[2]);

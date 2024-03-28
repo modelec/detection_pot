@@ -93,12 +93,12 @@ int main(int argc, char *argv[])
             stopRequested = true;
         }
 
-        for (auto [tags, matrix] : r.second)
+        for (const auto& [tags, matrix] : r.second)
         {
-            if (tags.type == FLOWER)
-            {
+            if (tags.type == FLOWER) {
                 //ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
-            } else if (tags.type == SOLAR_PANEL)
+            }
+            else if (tags.type == SOLAR_PANEL)
             {
                 //ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
             }
