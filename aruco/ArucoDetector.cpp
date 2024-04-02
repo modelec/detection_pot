@@ -86,7 +86,6 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cv::Mat frameNotRotated;
     cam->getVideoFrame(frameNotRotated, 1000);
     // cap >> frame;  // Capture frame from the camera
-    // TODO rotate the frame 180 degrees
     cv::flip(frameNotRotated, frame, -1);
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
