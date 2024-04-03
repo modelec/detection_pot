@@ -23,7 +23,7 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
     this->cam = new lccv::PiCamera;
     cam->options->video_width=1920;
     cam->options->video_height=1080;
-    cam->options->framerate=10;
+    cam->options->framerate=5;
     cam->options->verbose=true;
 
     started = true;
@@ -105,7 +105,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
     // 4.6
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, );
+    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, this->parameters);
 
     // opencv 4.8
     // detector.detectMarkers(frame, markerCorners, markerIds);
