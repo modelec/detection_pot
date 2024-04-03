@@ -17,6 +17,7 @@ class ArucoDetector {
 
     // 4.6
     cv::Ptr<cv::aruco::Dictionary> dictionary;
+    cv::Ptr<cv::aruco::DetectorParameters> parameters;
 
     // 4.8
     // cv::aruco::Dictionary dictionary;

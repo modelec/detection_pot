@@ -9,6 +9,7 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
 
     // 4.6
     this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
+    this->parameters = cv::aruco::DetectorParameters::create();
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
@@ -84,9 +85,11 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
     cv::Mat frame;
     cv::Mat frameNotRotated;
+    cv::Mat frameDistored;
     cam->getVideoFrame(frameNotRotated, 1000);
     // cap >> frame;  // Capture frame from the camera
-    cv::flip(frameNotRotated, frame, -1);
+    cv::flip(frameNotRotated, frameDistored, -1);
+    cv::undistort(frameDistored, fram, cameraMatrix, distCoeffs);
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
@@ -102,7 +105,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
     // 4.6
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds);
+    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, );
 
     // opencv 4.8
     // detector.detectMarkers(frame, markerCorners, markerIds);
@@ -127,7 +130,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
             cv::Mat rvec, tvec;
 
-            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec);
+            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, SOLVEPNP_IPPE);
 
             if (!headless)
             {
