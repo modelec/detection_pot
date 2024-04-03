@@ -31,9 +31,9 @@ public:
     void setFlowerObjectRepresentation()
     {
         this->objectRepresenation = cv::Mat(4, 1, CV_32FC3);
-        this->objectRepresenation.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-19.5/2.f, 20/2.f, 0);
-        this->objectRepresenation.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(19.5/2.f, 20/2.f, 0);
-        this->objectRepresenation.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(19f/2.f, -20/2.f, 0);
-        this->objectRepresenation.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-19f/2.f, -20/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-19.5f/2.f, 20.f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(19.5f/2.f, 20.f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(19.f/2.f, -20.f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-19.f/2.f, -20.f/2.f, 0);
     }
 };
