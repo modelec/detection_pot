@@ -89,7 +89,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cam->getVideoFrame(frameNotRotated, 1000);
     // cap >> frame;  // Capture frame from the camera
     cv::flip(frameNotRotated, frameDistored, -1);
-    cv::undistort(frameDistored, fram, cameraMatrix, distCoeffs);
+    cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
@@ -130,7 +130,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
             cv::Mat rvec, tvec;
 
-            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, SOLVEPNP_IPPE);
+            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, cv::SOLVEPNP_IPPE);
 
             if (!headless)
             {
