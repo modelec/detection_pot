@@ -11,6 +11,14 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
     this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
     this->parameters = cv::aruco::DetectorParameters::create();
 
+    // TODO
+    // Adjusting parameters based on specific needs
+    parameters->adaptiveThreshConstant = true;
+    parameters->minMarkerPerimeterRate = 0.03;
+    parameters->maxMarkerPerimeterRate = 4.0;
+    parameters->perspectiveRemoveIgnoredMarginPerCell = 0.13;
+    parameters->polygonalApproxAccuracyRate = 0.03;
+
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
         cos(pose->theta), 0, sin(pose->theta), pose->position.x,
@@ -83,11 +91,10 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         tags = this->arucoTags;
     }
 
-    cv::Mat frame;
+cv::Mat frame;
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
     cam->getVideoFrame(frameNotRotated, 1000);
-    // cap >> frame;  // Capture frame from the camera
     cv::flip(frameNotRotated, frameDistored, -1);
     cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
 
@@ -98,15 +105,60 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         return result;
     }
 
+    // Convert frame to grayscale
     cv::Mat gray;
     cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+
+    // Preprocess with adaptive thresholding to handle varying lighting
+    cv::Mat adaptiveThresh;
+    cv::adaptiveThreshold(gray, adaptiveThresh, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 11, 2);
+
+    // Find contours in the thresholded image
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    cv::findContours(adaptiveThresh, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+    // Approximate contours to polygons
+    std::vector<std::vector<cv::Point>> approxContours(contours.size());
+    for (size_t i = 0; i < contours.size(); i++) {
+        cv::approxPolyDP(cv::Mat(contours[i]), approxContours[i], 3, true); // Adjust epsilon as needed
+    }
+
+    // Use approximated contours to define regions of interest (ROIs)
+    std::vector<cv::Rect> ROIs;
+    for (const auto& contour : approxContours) {
+        cv::Rect boundingRect = cv::boundingRect(contour);
+        // Optionally, apply filtering based on ROI size or aspect ratio
+        // For example:
+        // if (boundingRect.area() > minArea && boundingRect.width / static_cast<double>(boundingRect.height) > minAspectRatio) {
+        ROIs.push_back(boundingRect);
+    }
 
     std::vector<int> markerIds;
     std::vector<std::vector<cv::Point2f>> markerCorners;
 
-    // 4.6
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, this->parameters);
+    // Detect ArUco markers within defined ROIs
+    for (const auto& roi : ROIs) {
+        cv::Rect roiRect = roi & cv::Rect(0, 0, frame.cols, frame.rows); // Ensure the ROI is within the image boundaries
+        cv::Mat roiFrame = frame(roiRect).clone(); // Extract ROI
 
+        // Detect ArUco markers within the ROI
+        std::vector<int> ids;
+        std::vector<std::vector<cv::Point2f>> corners;
+        cv::aruco::detectMarkers(roiFrame, this->dictionary, corners, ids, this->parameters);
+
+        // Adjust marker corners to global coordinates
+        for (auto& corner : corners) {
+            for (auto& pt : corner) {
+                pt.x += roiRect.x;
+                pt.y += roiRect.y;
+            }
+        }
+
+        // Merge results
+        markerIds.insert(markerIds.end(), ids.begin(), ids.end());
+        markerCorners.insert(markerCorners.end(), corners.begin(), corners.end());
+    }
     // opencv 4.8
     // detector.detectMarkers(frame, markerCorners, markerIds);
 
