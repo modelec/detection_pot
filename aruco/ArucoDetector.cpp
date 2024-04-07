@@ -91,7 +91,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         tags = this->arucoTags;
     }
 
-cv::Mat frame;
+    cv::Mat frame;
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
     cam->getVideoFrame(frameNotRotated, 1000);

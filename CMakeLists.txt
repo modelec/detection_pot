@@ -21,7 +21,14 @@ add_executable(calibration
         calibration.cpp
 )
 
+add_executable(calibrationCharuco
+        ${COMMON_SOURCES}
+        calibrationCharuco.cpp
+)
+
 target_link_libraries( calibration -llccv ${OpenCV_LIBS} )
+
+target_link_libraries( calibrationCharuco -llccv ${OpenCV_LIBS} )
 
 # Project 2 sources and executable
 set(arucoDetectionSources
