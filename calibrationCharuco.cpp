@@ -151,26 +151,16 @@ int main(int argc, char *argv[]) {
         cv::aruco::calibrateCameraCharuco(allCharucoCorners, allCharucoIds, charucoboard, imgSize,
                                       cameraMatrix, distCoeffs, rvecs, tvecs, calibrationFlags);
 
-    bool saveOk =  cv::saveCameraParams(outputFile, imgSize, 16.0f/9.0f, calibrationFlags,
-                                    cameraMatrix, distCoeffs, repError);
-    if(!saveOk) {
-        std::cerr << "Cannot save output file" << std::endl;
-        return 0;
-    }
-
     std::cout << "Rep Error: " << repError << std::endl;
     std::cout << "Rep Error Aruco: " << arucoRepErr << std::endl;
     std::cout << "Calibration saved to " << outputFile << std::endl;
 
-
-
-
-    /*std::cout << "Rep Error: " << arucoRepErr << std::endl;
+    std::cout << "Rep Error: " << arucoRepErr << std::endl;
 
     cv::FileStorage fs("calibration_results.yaml", cv::FileStorage::WRITE);
     fs << "cameraMatrix" << cameraMatrix;
     fs << "distCoeffs" << distCoeffs;
-    fs.release(); // Release the file*/
+    fs.release(); // Release the file
 
     return 0;
 }
