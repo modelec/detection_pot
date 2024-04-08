@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         putText(imageCopy, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
                 cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
 
-        imshow("out", imageCopy);
+        imshow("Video", imageCopy);
         key = (char)cv::waitKey(10);
         if(key == 'c' && !ids.empty()) {
             std::cout << "Frame captured" << std::endl;
