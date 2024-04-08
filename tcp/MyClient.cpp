@@ -43,7 +43,7 @@ void MyClient::handleMessage(const std::string& message)
         } else if (messageSplited[2] == "set robot_pos")
         {
             // cut the string with space and take the first, second, third and fourth element
-            std::vector<std::string> tokens = TCPSocket::split(message, ",");
+            std::vector<std::string> tokens = TCPSocket::split(messageSplited[3], ",");
 
             robotPose->position.x = std::stof(tokens[0]);
             robotPose->position.y = std::stof(tokens[1]);
