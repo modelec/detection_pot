@@ -111,8 +111,11 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cv::Mat gray;
     cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
 
+    std::vector<int> markerIds;
+    std::vector<std::vector<cv::Point2f>> markerCorners;
+
     // Preprocess with adaptive thresholding to handle varying lighting
-    cv::Mat adaptiveThresh;
+    /*cv::Mat adaptiveThresh;
     cv::adaptiveThreshold(gray, adaptiveThresh, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 11, 2);
 
     // Find contours in the thresholded image
@@ -135,10 +138,6 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         // if (boundingRect.area() > minArea && boundingRect.width / static_cast<double>(boundingRect.height) > minAspectRatio) {
         ROIs.push_back(boundingRect);
     }
-
-    std::vector<int> markerIds;
-    std::vector<std::vector<cv::Point2f>> markerCorners;
-
     // Detect ArUco markers within defined ROIs
     for (const auto& roi : ROIs) {
         cv::Rect roiRect = roi & cv::Rect(0, 0, frame.cols, frame.rows); // Ensure the ROI is within the image boundaries
@@ -160,9 +159,12 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         // Merge results
         markerIds.insert(markerIds.end(), ids.begin(), ids.end());
         markerCorners.insert(markerCorners.end(), corners.begin(), corners.end());
-    }
+    }*/
     // opencv 4.8
     // detector.detectMarkers(frame, markerCorners, markerIds);
+
+    // 4.6
+    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, this->parameters);
 
     if (!markerIds.empty())
     {
@@ -206,7 +208,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             cv::Mat rotaEuler = (cv::Mat_<double>(3, 1) << roll, pitch, yaw);
 
             // Apply the homogeneous transformation to tvec
-            cv::Mat translat = (cv::Mat_<double>(4, 1) << tvec.at<double>(2, 0) + 91, tvec.at<double>(1, 0), (tvec.at<double>(0, 0)), 1);
+            cv::Mat translat = (cv::Mat_<double>(4, 1) << tvec.at<double>(2, 0) + 91, tvec.at<double>(1, 0) /* + TODO HAUTEUR CAMERA */, (tvec.at<double>(0, 0)), 1);
 
             cv::Mat transformedTvec = (transformationMatrix * translat);
 
