@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     while(true) {
         cv::Mat image, imageCopy;
-        if(!cam.getVideoFrame(image,1000)){
+        if(!cam->getVideoFrame(image,1000)){
             std::cout<<"Timeout error"<<std::endl;
         }
 
