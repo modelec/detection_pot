@@ -1,4 +1,4 @@
-#include <opencv2/opencv.hpp>
+#include <opencv2/aruco.hpp>
 
 int main(int argc, char** argv) {
     cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
