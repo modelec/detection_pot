@@ -45,10 +45,10 @@ void MyClient::handleMessage(const std::string& message)
             // cut the string with space and take the first, second, third and fourth element
             std::vector<std::string> tokens = TCPSocket::split(message, " ");
 
-            robotPose->position.x = std::stof(tokens[1]);
-            robotPose->position.y = std::stof(tokens[2]);
-            robotPose->position.z = std::stof(tokens[3]);
-            robotPose->theta = std::stof(tokens[4]);
+            robotPose->position.x = std::stof(tokens[0]);
+            robotPose->position.y = std::stof(tokens[1]);
+            robotPose->position.z = std::stof(tokens[2]);
+            robotPose->theta = std::stof(tokens[3]);
         }
     }
 }
