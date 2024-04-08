@@ -48,11 +48,13 @@ int main(int argc, char *argv[]) {
     std::vector< cv::Mat > allImgs;
     cv::Size imgSize;
 
-    while(true) {
+    char key;
+
+    while(key != 27) {
         cv::Mat image, imageCopy;
         if(!cam->getVideoFrame(image,1000)){
             std::cout<<"Timeout error"<<std::endl;
-            break;
+            continue;
         }
 
         std::vector< int > ids;
@@ -75,8 +77,7 @@ int main(int argc, char *argv[]) {
                 cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
 
         imshow("out", imageCopy);
-        char key = (char)cv::waitKey(10);
-        if(key == 27) break;
+        key = (char)cv::waitKey(10);
         if(key == 'c' && !ids.empty()) {
             std::cout << "Frame captured" << std::endl;
             allCorners.push_back(corners);
@@ -163,6 +164,8 @@ int main(int argc, char *argv[]) {
     fs << "cameraMatrix" << cameraMatrix;
     fs << "distCoeffs" << distCoeffs;
     fs.release(); // Release the file
+    cam->stopVideo();
+    cv::destroyAllWindows();
 
     return 0;
 }
