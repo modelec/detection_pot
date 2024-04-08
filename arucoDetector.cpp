@@ -80,8 +80,6 @@ int main(int argc, char *argv[])
     client.sendMessage("aruco;strat;get robot_pose;0");
 
     while (true) {
-        std::cout << robotPose->position.x << " " << robotPose->position.y << " " << robotPose->position.z << " " << robotPose->theta << std::endl;
-
         auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
 
         code = r.first;
@@ -104,7 +102,7 @@ int main(int argc, char *argv[])
         for (const auto& [tags, matrix] : r.second)
         {
             if (tags.type == FLOWER) {
-                // std::cout << tags.id << " " << tags.name << " " << matrix.first << " " << matrix.second << std::endl;
+                std::cout << tags.id << " " << tags.name << " " << matrix.first << " " << matrix.second << std::endl;
                 //ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
             }
             else if (tags.type == SOLAR_PANEL)
