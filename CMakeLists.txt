@@ -56,3 +56,12 @@ set(photo
 add_executable(photo ${photo})
 
 target_link_libraries( photo -llccv ${OpenCV_LIBS} )
+
+set(createCharuco
+        ${COMMON_SOURCES}
+        createCharuco.cpp
+)
+
+add_executable(createCharuco ${createCharucoBoard})
+
+target_link_libraries( createCharuco -llccv ${OpenCV_LIBS} )
