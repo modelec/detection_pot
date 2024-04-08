@@ -46,9 +46,9 @@ void MyClient::handleMessage(const std::string& message)
             std::vector<std::string> tokens = TCPSocket::split(messageSplited[3], ",");
 
             robotPose->position.x = std::stof(tokens[0]);
-            robotPose->position.y = std::stof(tokens[1]);
-            robotPose->position.z = std::stof(tokens[2]);
-            robotPose->theta = std::stof(tokens[3]);
+            // robotPose->position.y = std::stof(tokens[1]);
+            robotPose->position.z = std::stof(tokens[1]);
+            robotPose->theta = std::stof(tokens[2]);
         }
     }
 }
