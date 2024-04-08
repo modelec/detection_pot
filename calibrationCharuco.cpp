@@ -53,11 +53,13 @@ int main(int argc, char *argv[]) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     while(key != 27) {
-        cv::Mat image, imageCopy;
-        if(!cam->getVideoFrame(image,1000)){
+        cv::Mat image, imageCopy, imgNotRotated;
+        if(!cam->getVideoFrame(imgNotRotated,1000)){
             std::cout<<"Timeout error"<<std::endl;
             continue;
         }
+
+        cv::flip(imgNotRotated, image, -1);
 
         std::vector< int > ids;
         std::vector< std::vector< cv::Point2f > > corners, rejected;
