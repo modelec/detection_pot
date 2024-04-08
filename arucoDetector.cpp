@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         userInput = std::thread(userInputThread);
     }
 
-    auto* robotPose = new Type::RobotPose{cv::Point3f(0, 0, 0), CV_PI/2};
+    auto* robotPose = new Type::RobotPose{cv::Point3f(500, 0, 500), -CV_PI/2};
 
     ArucoDetector detector(robotPose, calibrationPath, BLUE, headless);
 
