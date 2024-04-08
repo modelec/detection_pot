@@ -21,9 +21,9 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
 
 
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(pose->theta), 0, sin(pose->theta), pose->position.z,
+        cos(pose->theta), 0, sin(pose->theta), pose->position.x,
         0, 1, 0, pose->position.y,
-        -sin(pose->theta), 0, cos(pose->theta), pose->position.x,
+        -sin(pose->theta), 0, cos(pose->theta), pose->position.z,
         0, 0, 0, 1
     );
     this->readCameraParameters(calibrationPath);
@@ -236,9 +236,9 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
 void ArucoDetector::updateTransformationMatrix() {
     this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(robotPose->theta), 0, sin(robotPose->theta), robotPose->position.y,
+        cos(robotPose->theta), 0, sin(robotPose->theta), robotPose->position.x,
         0, 1, 0, robotPose->position.y,
-        -sin(robotPose->theta), 0, cos(robotPose->theta), robotPose->position.x,
+        -sin(robotPose->theta), 0, cos(robotPose->theta), robotPose->position.z,
         0, 0, 0, 1
     );
 }
