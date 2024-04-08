@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     cam->options->framerate=5;
     cam->options->verbose=true;
     cv::namedWindow("Video",cv::WINDOW_NORMAL);
+    cam->startVideo();
 
     cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
 
