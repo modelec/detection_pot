@@ -19,12 +19,11 @@ int main(int argc, char *argv[]) {
             cv::aruco::CharucoBoard::create(squaresX, squaresY, squareLength, markerLength, AruCoDict);
     cv::Ptr<cv::aruco::Board> board = charucoboard.staticCast<cv::aruco::Board>();
 
-    lccv::PiCamera cap;
-    cap.options->video_width=1920;
-    cap.options->video_height=1080;
-    cap.options->framerate=5;
-    cap.options->verbose=true;
-    cap.startVideo();
+    lccv::PiCamera* cam = new lccv::PiCamera;
+    cam->options->video_width=1920;
+    cam->options->video_height=1080;
+    cam->options->framerate=5;
+    cam->options->verbose=true;
     cv::namedWindow("Video",cv::WINDOW_NORMAL);
 
     cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
@@ -50,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     while(true) {
         cv::Mat image, imageCopy;
-        if(!cap.getVideoFrame(image,1000)){
+        if(!cam.getVideoFrame(image,1000)){
             std::cout<<"Timeout error"<<std::endl;
         }
 
