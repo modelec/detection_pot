@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
         cv::Mat image, imageCopy;
         if(!cam->getVideoFrame(image,1000)){
             std::cout<<"Timeout error"<<std::endl;
+            break;
         }
 
         std::vector< int > ids;
