@@ -8,10 +8,10 @@ int main(int argc, char *argv[]) {
 
     cv::Ptr<cv::aruco::Dictionary> AruCoDict = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
 
-    int squaresX = 1920;
-    int squaresY = 1080;
-    float squareLength = 20;
-    float markerLength = 10;
+    int squaresX = 7;
+    int squaresY = 5;
+    float squareLength = 0.04f;
+    float markerLength = 0.02f;
     std::string outputFile = "camera_calibration.yml";
 
     // create charuco board object
@@ -59,12 +59,12 @@ int main(int argc, char *argv[]) {
         cv::aruco::detectMarkers(image, AruCoDict, corners, ids, detectorParams, rejected);
 
         cv::Mat currentCharucoCorners, currentCharucoIds;
-        if(ids.size() > 0)
+        if(!ids.empty())
             cv::aruco::interpolateCornersCharuco(corners, ids, image, charucoboard, currentCharucoCorners,
                                              currentCharucoIds);
         // draw results
         image.copyTo(imageCopy);
-        if(ids.size() > 0) cv::aruco::drawDetectedMarkers(imageCopy, corners);
+        if(!ids.empty()) cv::aruco::drawDetectedMarkers(imageCopy, corners);
 
         if(currentCharucoCorners.total() > 0)
             cv::aruco::drawDetectedCornersCharuco(imageCopy, currentCharucoCorners, currentCharucoIds);
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         imshow("out", imageCopy);
         char key = (char)cv::waitKey(1000);
         if(key == 27) break;
-        if(key == 'c' && ids.size() > 0) {
+        if(key == 'c' && !ids.empty()) {
             std::cout << "Frame captured" << std::endl;
             allCorners.push_back(corners);
             allIds.push_back(ids);
