@@ -1,6 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <lccv.hpp>
+#include <thread>
 
 #include <opencv2/aruco/charuco.hpp>
 
@@ -49,6 +50,7 @@ int main(int argc, char *argv[]) {
     cv::Size imgSize;
 
     char key;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     while(key != 27) {
         cv::Mat image, imageCopy;
