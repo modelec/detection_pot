@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Rep Error: " << arucoRepErr << std::endl;
 
-    cv::FileStorage fs("calibration_results.yaml", cv::FileStorage::WRITE);
+    cv::FileStorage fs(outputFile, cv::FileStorage::WRITE);
     fs << "cameraMatrix" << cameraMatrix;
     fs << "distCoeffs" << distCoeffs;
     fs.release(); // Release the file
