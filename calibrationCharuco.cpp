@@ -25,8 +25,7 @@ int main(int argc, char *argv[]) {
     cap.options->framerate=5;
     cap.options->verbose=true;
     cap.startVideo();
-
-    cv::Mat img, imgCopy;
+    cv::namedWindow("Video",cv::WINDOW_NORMAL);
 
     cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
 
@@ -51,7 +50,9 @@ int main(int argc, char *argv[]) {
 
     while(true) {
         cv::Mat image, imageCopy;
-        cap.getVideoFrame(image,1000);
+        if(!cap.getVideoFrame(image,1000)){
+            std::cout<<"Timeout error"<<std::endl;
+        }
 
         std::vector< int > ids;
         std::vector< std::vector< cv::Point2f > > corners, rejected;
@@ -73,7 +74,7 @@ int main(int argc, char *argv[]) {
                 cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
 
         imshow("out", imageCopy);
-        char key = (char)cv::waitKey(1000);
+        char key = (char)cv::waitKey(10);
         if(key == 27) break;
         if(key == 'c' && !ids.empty()) {
             std::cout << "Frame captured" << std::endl;
