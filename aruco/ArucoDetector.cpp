@@ -91,6 +91,8 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         tags = this->arucoTags;
     }
 
+    this->updateTransformationMatrix();
+
     cv::Mat frame;
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
@@ -231,6 +233,16 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     result.first = 0;
     return result;
 }
+
+void ArucoDetector::updateTransformationMatrix() {
+    this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
+        cos(robotPose->theta), 0, sin(robotPose->theta), robotPose->position.x,
+        0, 1, 0, robotPose->position.y,
+        -sin(robotPose->theta), 0, cos(robotPose->theta), robotPose->position.z,
+        0, 0, 0, 1
+    );
+}
+
 
 /*void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
 {

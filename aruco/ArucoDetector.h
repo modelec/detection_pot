@@ -42,6 +42,8 @@ public:
     void readCameraParameters(const std::string& path);
 
     void addArucoTag(const ArucoTag& tag);
+
+    void updateTransformationMatrix();
 /*
     static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose);
 
