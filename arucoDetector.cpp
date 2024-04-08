@@ -86,7 +86,9 @@ int main(int argc, char *argv[])
 
         code = r.first;
 
-        client.setArucoTags(r.second);
+        if (!r.second.empty()) {
+            client.setArucoTags(r.second);
+        }
 
         if (code == -2)
         {
