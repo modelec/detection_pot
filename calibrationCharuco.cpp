@@ -8,8 +8,8 @@ int main(int argc, char *argv[]) {
 
     cv::Ptr<cv::aruco::Dictionary> AruCoDict = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
 
-    int squaresX = 7;
-    int squaresY = 5;
+    int squaresX = 5;
+    int squaresY = 7;
     float squareLength = 0.04f;
     float markerLength = 0.02f;
     std::string outputFile = "camera_calibration.yml";
