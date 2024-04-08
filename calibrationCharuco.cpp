@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <lccv.hpp>
 
-#include "aruco/ArucoDetector.h"
+#include <opencv2/aruco/charuco.hpp>
 
 int main(int argc, char *argv[]) {
 
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     cv::Mat img, imgCopy;
 
-    cv::aruco::DetectorParameters detectorParams = cv::aruco::DetectorParameters();
+    cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
 
     // cv::aruco::CharucoParameters charucoParams;
 
