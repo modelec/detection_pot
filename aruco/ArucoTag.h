@@ -32,10 +32,15 @@ public:
     {
         // 18.96 w
         // 19.3 h
-        this->objectRepresenation = cv::Mat(4, 1, CV_32FC3);
+/*        this->objectRepresenation = cv::Mat(4, 1, CV_32FC3);
         this->objectRepresenation.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-18.9f/2.f, 19.1f/2.f, 0);
         this->objectRepresenation.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(18.9f/2.f, 19.1f/2.f, 0);
         this->objectRepresenation.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(18.9f/2.f, -19.1f/2.f, 0);
-        this->objectRepresenation.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-18.9f/2.f, -19.1f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-18.9f/2.f, -19.1f/2.f, 0);*/
+
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-19.5f/2.f, 19.7f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(19.5f/2.f, 19.7f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(19.5f/2.f, -19.7f/2.f, 0);
+        this->objectRepresenation.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-19.5f/2.f, -19.7f/2.f, 0);
     }
 };
