@@ -39,7 +39,7 @@ void MyClient::handleMessage(const std::string& message)
         } else if (messageSplited[2] == "ping")
         {
             this->sendMessage("aruco;ihm;pong;1");
-        } else if (messageSplited[2] == "set robot_pos")
+        } else if (messageSplited[2] == "set pos")
         {
             // cut the string with space and take the first, second, third and fourth element
             std::vector<std::string> tokens = TCPSocket::split(messageSplited[3], ",");
