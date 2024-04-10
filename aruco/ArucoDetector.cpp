@@ -1,6 +1,6 @@
 #include "ArucoDetector.h"
 
-ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, const Team team, const bool headless) : robotPose(pose), headless(headless), team(team)
+ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team, const bool headless) : headless(headless), team(team)
 {
     // opencv 4.8
     // this->detector = cv::aruco::ArucoDetector(getPredefinedDictionary(cv::aruco::DICT_4X4_50), cv::aruco::DetectorParameters());
@@ -19,13 +19,6 @@ ArucoDetector::ArucoDetector(Type::RobotPose* pose, const std::string& calibrati
     parameters->perspectiveRemoveIgnoredMarginPerCell = 0.13;
     parameters->polygonalApproxAccuracyRate = 0.03;
 
-
-    this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(pose->theta), 0, sin(pose->theta), pose->position.x,
-        0, 1, 0, pose->position.y,
-        -sin(pose->theta), 0, cos(pose->theta), pose->position.z,
-        0, 0, 0, 1
-    );
     this->readCameraParameters(calibrationPath);
 
     this->cam = new lccv::PiCamera;
@@ -90,8 +83,6 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     {
         tags = this->arucoTags;
     }
-
-    this->updateTransformationMatrix();
 
     cv::Mat frame;
     cv::Mat frameNotRotated;
@@ -210,16 +201,14 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             // Apply the homogeneous transformation to tvec
             cv::Mat translat = (cv::Mat_<double>(4, 1) << tvec.at<double>(2, 0) + 91/* TODO camera is not at the center*/ /* TODO la pince n'est pas au millieu non plus*/, tvec.at<double>(1, 0) /* + TODO HAUTEUR CAMERA */, (tvec.at<double>(0, 0)), 1);
 
-            cv::Mat transformedTvec = (transformationMatrix * translat);
-
-            result.second.emplace_back(tag, std::make_pair(transformedTvec, rotaEuler));
+            result.second.emplace_back(tag, std::make_pair(translat, rotaEuler));
         }
     }
 
-    std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
+    /*std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
     {
-        return distanceBetweenRobotAndTag(*robotPose, a.second.first) < distanceBetweenRobotAndTag(*robotPose, b.second.first);
-    });
+        return // TODO sort with the tvec
+    });*/
 
     if (!headless)
     {
@@ -235,16 +224,6 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     result.first = 0;
     return result;
 }
-
-void ArucoDetector::updateTransformationMatrix() {
-    this->transformationMatrix = (cv::Mat_<double>(4, 4) <<
-        cos(robotPose->theta), 0, sin(robotPose->theta), robotPose->position.x,
-        0, 1, 0, robotPose->position.y,
-        -sin(robotPose->theta), 0, cos(robotPose->theta), robotPose->position.z,
-        0, 0, 0, 1
-    );
-}
-
 
 /*void ArucoDetector::flowerDetector(const ArucoTag& tag, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose)
 {

@@ -7,14 +7,12 @@
 #include "../aruco/ArucoTag.h"
 
 class MyClient : public TCPClient {
-Type::RobotPose* robotPose;
-std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>> arucoTags;
+
+    std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>> arucoTags;
 
 public:
 
-    ~MyClient() override;
-
-    explicit MyClient(Type::RobotPose* robotPose, const char* ip = "127.0.0.1", int port = 8080);
+    explicit MyClient(const char* ip = "127.0.0.1", int port = 8080);
 
     void handleMessage(const std::string& message) override;
 

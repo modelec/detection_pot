@@ -54,9 +54,7 @@ int main(int argc, char *argv[])
         userInput = std::thread(userInputThread);
     }
 
-    auto* robotPose = new Type::RobotPose{cv::Point3f(500, 0, 500), -CV_PI/2};
-
-    ArucoDetector detector(robotPose, calibrationPath, BLUE, headless);
+    ArucoDetector detector(calibrationPath, BLUE, headless);
 
     auto whiteFlower = ArucoTag(36, "White_flower", 19.6, FLOWER);
     whiteFlower.setFlowerObjectRepresentation();
@@ -69,7 +67,7 @@ int main(int argc, char *argv[])
 
     int port = std::stoi(argv[2]);
 
-    MyClient client(robotPose, "127.0.0.1", port);
+    MyClient client("127.0.0.1", port);
 
     client.start();
 

@@ -7,8 +7,6 @@
 class ArucoDetector {
     std::vector<ArucoTag> arucoTags;
 
-    Type::RobotPose* robotPose;
-
     cv::Mat cameraMatrix;
     cv::Mat distCoeffs;
 
@@ -26,14 +24,12 @@ class ArucoDetector {
 
     bool headless;
 
-    cv::Mat transformationMatrix;
-
     Team team;
 
     bool started = false;
 
 public:
-    ArucoDetector(Type::RobotPose* pose, const std::string& calibrationPath, Team team, bool headless = false);
+    ArucoDetector(const std::string& calibrationPath, Team team, bool headless = false);
 
     ~ArucoDetector();
 
@@ -42,8 +38,6 @@ public:
     void readCameraParameters(const std::string& path);
 
     void addArucoTag(const ArucoTag& tag);
-
-    void updateTransformationMatrix();
 /*
     static void flowerDetector(const ArucoTag& type, const cv::Mat& translationMatrix, const cv::Mat& rotationMatrix, Type::RobotPose* robotPose);
 
