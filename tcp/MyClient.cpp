@@ -25,8 +25,8 @@ void MyClient::handleMessage(const std::string& message)
                 {
                     res += std::to_string(tag.id) + ",";
                     res += tag.name + ",";
-                    res += std::to_string(pos.first.at<double>(0, 0)) + ",";
                     res += std::to_string(pos.first.at<double>(2, 0)) + ",";
+                    res += std::to_string(pos.first.at<double>(0, 0)) + ",";
                     res += std::to_string(pos.second.at<double>(0, 0)) + ",";
                     res += std::to_string(pos.second.at<double>(1, 0)) + ",";
                     res += std::to_string(pos.second.at<double>(2, 0)) + ",";
