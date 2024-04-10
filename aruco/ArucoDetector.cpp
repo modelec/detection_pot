@@ -189,12 +189,16 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             cv::Mat rotationMatrix;
             cv::Rodrigues(rvec, rotationMatrix);
 
+            std::cout << rvec << std::endl;
+
             // Extract Euler angles from the rotation matrix
             double roll, pitch, yaw;
             pitch = asin(rotationMatrix.at<double>(2, 0));
             roll = atan2(-rotationMatrix.at<double>(2, 1), rotationMatrix.at<double>(2, 2));
             yaw = atan2(-rotationMatrix.at<double>(1, 0), rotationMatrix.at<double>(0, 0));
             // Angles can be used to calculate the distance to the center of the flower.
+
+            std::cout << roll, pitch, yaw << std::endl;
 
             cv::Mat rotaEuler = (cv::Mat_<double>(3, 1) << roll, pitch, yaw);
 
@@ -205,10 +209,10 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
         }
     }
 
-    /*std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
+    std::sort(result.second.begin(), result.second.end(), [this](const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& a, const std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>& b)
     {
-        return // TODO sort with the tvec
-    });*/
+        return distanceBetweenRobotAndTag(a.second.first) < distanceBetweenRobotAndTag(b.second.first);
+    });
 
     if (!headless)
     {

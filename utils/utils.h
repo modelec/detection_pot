@@ -10,12 +10,6 @@ namespace Type
         float pitch;
         float yaw;
     };
-
-    struct RobotPose
-    {
-        cv::Point3f position;
-        float theta; // rotation around the y axis
-    };
 }
 
 enum Team
@@ -24,4 +18,4 @@ enum Team
     YELLOW
 };
 
-double distanceBetweenRobotAndTag(const Type::RobotPose& robotPose, const cv::Mat& a);
+double distanceBetweenRobotAndTag(const cv::Mat& a);
