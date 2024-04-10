@@ -204,7 +204,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             cv::Mat rotaEuler = (cv::Mat_<double>(3, 1) << roll, pitch, yaw);
 
             // Apply the homogeneous transformation to tvec
-            cv::Mat translat = (cv::Mat_<double>(4, 1) << tvec.at<double>(2, 0) + 91/* TODO camera is not at the center*/ /* TODO la pince n'est pas au millieu non plus*/, tvec.at<double>(1, 0) /* + TODO HAUTEUR CAMERA */, (tvec.at<double>(0, 0)), 1);
+            cv::Mat translat = (cv::Mat_<double>(4, 1) << tvec.at<double>(2, 0), tvec.at<double>(1, 0), (tvec.at<double>(0, 0)), 1);
 
             result.second.emplace_back(tag, std::make_pair(translat, rotaEuler));
         }
