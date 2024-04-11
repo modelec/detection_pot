@@ -189,8 +189,8 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             cv::Mat rotationMatrix;
             cv::Rodrigues(rvec, rotationMatrix);
 
-            std::cout << rvec << std::endl;
-            std::cout << rotationMatrix << std::endl;
+            // std::cout << rvec << std::endl;
+            // std::cout << rotationMatrix << std::endl;
 
             // Extract Euler angles from the rotation matrix
             double roll, pitch, yaw;
@@ -199,7 +199,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             yaw = atan2(-rotationMatrix.at<double>(1, 0), rotationMatrix.at<double>(0, 0));
             // Angles can be used to calculate the distance to the center of the flower.
 
-            std::cout << roll << " " << pitch << " " << yaw << std::endl << std::endl;
+            // std::cout << roll << " " << pitch << " " << yaw << std::endl << std::endl;
 
             cv::Mat rotaEuler = (cv::Mat_<double>(3, 1) << roll, pitch, yaw);
 

@@ -33,6 +33,8 @@ void MyClient::handleMessage(const std::string& message)
                 }
             }
 
+            std::cout << "Sent to client " << res << std::endl;
+
             this->sendMessage(res.c_str());
         } else if (messageSplited[2] == "ping")
         {
