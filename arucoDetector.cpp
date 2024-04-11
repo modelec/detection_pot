@@ -6,20 +6,13 @@
 #include <atomic>
 #include <optional>
 
-std::atomic<bool> stopRequested(false);
-
-void userInputThread() {
-    // Wait for the user to press Enter
-    std::cout << "Press Enter to stop the program..." << std::endl;
-    std::cin.ignore();
-    stopRequested = true;
-}
-
 int main(int argc, char *argv[])
 {
     // Settup argument parser
 
     bool headless = false;
+
+    bool stopRequested = false;
 
     for (int i = 0; i < argc; i++)
     {
@@ -45,14 +38,6 @@ int main(int argc, char *argv[])
     }
 
     const std::string calibrationPath = argv[1];
-
-    // End argument parser
-    std::optional<std::thread> userInput;
-
-    if (headless)
-    {
-        userInput = std::thread(userInputThread);
-    }
 
     ArucoDetector detector(calibrationPath, BLUE, headless);
 
@@ -109,16 +94,10 @@ int main(int argc, char *argv[])
             }
         }
 
-        if (stopRequested)
+        if (client.shouldStop() || stopRequested)
         {
             break;
         }
-    }
-
-    // Wait for the user input thread to finish
-    if (userInput.has_value())
-    {
-        userInput.value().join();
     }
 
     return 0;

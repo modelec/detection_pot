@@ -50,6 +50,7 @@ ArucoDetector::~ArucoDetector()
 {
     cam->stopVideo();
     cv::destroyAllWindows();
+    delete cam;
 }
 
 
