@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     auto purpleFlower = ArucoTag(13, "Purple_flower", 19.6, FLOWER);
     // purpleFlower.setFlowerObjectRepresentation();
 
-    auto solarPanel = ArucoTag(47, "Solar_panel", 50, SOLAR_PANEL);
+    auto solarPanel = ArucoTag(47, "Solar_panel", 36.8, SOLAR_PANEL);
 
     int code;
 
