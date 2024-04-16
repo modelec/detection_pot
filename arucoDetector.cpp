@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
             }
             else if (tags.type == SOLAR_PANEL)
             {
+                std::cout << tags.id << " " << tags.name << " " << matrix.first.at<double>(2, 0) << " " << matrix.first.at<double>(0, 0) << std::endl;
                 //ArucoDetector::solarPanelDetector(tags, matrix.first, matrix.first, robotPose);
             }
         }
