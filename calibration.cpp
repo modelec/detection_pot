@@ -88,6 +88,8 @@ int main(int argc, char *argv[])
             // Store object and image points
             objectPoints.push_back(worldPoints);
             imagePoints.push_back(corners);
+
+            imgSize = image.size();
         }
     }
 
