@@ -34,14 +34,14 @@ ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team
         cv::namedWindow("ArUco Detection", cv::WINDOW_NORMAL);
     }
 
-    auto whiteFlower = ArucoTag(36, "White flower", 20, FLOWER);
-    whiteFlower.setFlowerObjectRepresentation();
-    this->addArucoTag(whiteFlower);
-    auto purpleFlower = ArucoTag(13, "Purple flower", 20, FLOWER);
-    purpleFlower.setFlowerObjectRepresentation();
-    this->addArucoTag(purpleFlower);
+    // auto whiteFlower = ArucoTag(36, "White flower", 20, FLOWER);
+    // whiteFlower.setFlowerObjectRepresentation();
+    // this->addArucoTag(whiteFlower);
+    // auto purpleFlower = ArucoTag(13, "Purple flower", 20, FLOWER);
+    // purpleFlower.setFlowerObjectRepresentation();
+    // this->addArucoTag(purpleFlower);
 
-    this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
+    // this->addArucoTag(ArucoTag(47, "Solar panel", 50, SOLAR_PANEL));
 
     cam->startVideo();
 }
@@ -64,6 +64,7 @@ void ArucoDetector::readCameraParameters(const std::string& path)
     } else {
         std::cerr << "Error reading calibration file." << std::endl;
     }
+    std::cout << "Camera matrix: " << cameraMatrix << " " << this->distCoeffs << std::endl;
 }
 
 void ArucoDetector::addArucoTag(const ArucoTag& tag)
