@@ -1,112 +1,98 @@
-#include <iostream>
-#include <filesystem>
-#include <lccv.hpp>
 #include <opencv2/opencv.hpp>
-#include <thread>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <stdio.h>
+#include <iostream>
 
-int main(int argc, char *argv[])
+// Defining the dimensions of checkerboard
+int CHECKERBOARD[2]{6,9};
+
+int main()
 {
+  // Creating vector to store vectors of 3D points for each checkerboard image
+  std::vector<std::vector<cv::Point3f> > objpoints;
 
-    for (int i = 0; i < argc; i++) {
-        if (std::string(argv[i]) == "--help")
-        {
-            std::cout << "Usage: " << argv[0] << " <directory>" << std::endl;
-            std::cout << "directory: The directory containing the calibration images." << std::endl;
-            return 0;
-        }
+  // Creating vector to store vectors of 2D points for each checkerboard image
+  std::vector<std::vector<cv::Point2f> > imgpoints;
+
+  // Defining the world coordinates for 3D points
+  std::vector<cv::Point3f> objp;
+  for(int i{0}; i<CHECKERBOARD[1]; i++)
+  {
+    for(int j{0}; j<CHECKERBOARD[0]; j++)
+      objp.push_back(cv::Point3f(j,i,0));
+  }
+
+
+  // Extracting path of individual image stored in a given directory
+  std::vector<cv::String> images;
+  // Path of the folder containing checkerboard images
+  std::string path = "./images/*.jpg";
+
+  cv::glob(path, images);
+
+  cv::Mat frame, gray;
+  // vector to store the pixel coordinates of detected checker board corners
+  std::vector<cv::Point2f> corner_pts;
+  bool success;
+
+  // Looping over all the images in the directory
+  for(int i{0}; i<images.size(); i++)
+  {
+    frame = cv::imread(images[i]);
+    cv::cvtColor(frame,gray,cv::COLOR_BGR2GRAY);
+
+    // Finding checker board corners
+    // If desired number of corners are found in the image then success = true
+    success = cv::findChessboardCorners(gray, cv::Size(CHECKERBOARD[0], CHECKERBOARD[1]), corner_pts, CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
+
+    /*
+     * If desired number of corner are detected,
+     * we refine the pixel coordinates and display
+     * them on the images of checker board
+    */
+    if(success)
+    {
+      cv::TermCriteria criteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 30, 0.001);
+
+      // refining pixel coordinates for given 2d points.
+      cv::cornerSubPix(gray,corner_pts,cv::Size(11,11), cv::Size(-1,-1),criteria);
+
+      // Displaying the detected corner points on the checker board
+      cv::drawChessboardCorners(frame, cv::Size(CHECKERBOARD[0], CHECKERBOARD[1]), corner_pts, success);
+
+      objpoints.push_back(objp);
+      imgpoints.push_back(corner_pts);
     }
 
-    if (argc < 2) {
-        std::cout << "Usage: " << argv[0] << " <directory>" << std::endl;
-        return 1;
-    }
+    cv::imshow("Image",frame);
+    cv::waitKey(0);
+  }
 
-    // Set the chessboard size (number of inner corners in width and height)
-    cv::Size chessboardSize(9, 6);
+  cv::destroyAllWindows();
 
-    cv::Size imgSize;
+  cv::Mat cameraMatrix,distCoeffs,R,T;
 
-    // Create vectors to store the detected chessboard corners and corresponding image points
-    std::vector<std::vector<cv::Point3f>> objectPoints; // 3D world points
-    std::vector<std::vector<cv::Point2f>> imagePoints;  // 2D image points
+  /*
+   * Performing camera calibration by
+   * passing the value of known 3D points (objpoints)
+   * and corresponding pixel coordinates of the
+   * detected corners (imgpoints)
+  */
+  cv::calibrateCamera(objpoints, imgpoints, cv::Size(gray.rows,gray.cols), cameraMatrix, distCoeffs, R, T);
 
-    // Generate the 3D world points for the chessboard corners
-    std::vector<cv::Point3f> worldPoints;
-    for (int i = 0; i < chessboardSize.height; ++i) {
-        for (int j = 0; j < chessboardSize.width; ++j) {
-            worldPoints.emplace_back(j, i, 0); // Assuming the chessboard lies in the XY plane (Z=0)
-        }
-    }
+  std::cout << "cameraMatrix : " << cameraMatrix << std::endl;
+  std::cout << "distCoeffs : " << distCoeffs << std::endl;
+  std::cout << "Rotation vector : " << R << std::endl;
+  std::cout << "Translation vector : " << T << std::endl;
 
-    lccv::PiCamera* cam = new lccv::PiCamera;
-    cam->options->video_width=1920;
-    cam->options->video_height=1080;
-    cam->options->framerate=5;
-    cam->options->verbose=true;
-    cv::namedWindow("Video",cv::WINDOW_NORMAL);
-    cam->startVideo();
+  cv::FileStorage fs("./calibration_results.yaml", cv::FileStorage::WRITE);
+  fs << "cameraMatrix" << cameraMatrix;
+  fs << "distCoeffs" << distCoeffs;
+  fs.release(); // Release the file
 
+  cv::destroyAllWindows();
 
-    char key;
-
-    while(key != 27) {
-        cv::Mat image, imageCopy, imgNotRotated;
-        if(!cam->getVideoFrame(imgNotRotated,1000)){
-            std::cout<<"Timeout error"<<std::endl;
-            continue;
-        }
-
-        cv::flip(imgNotRotated, image, -1);
-
-        // Convert the image to grayscale
-        cv::Mat gray;
-        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-
-        // Find chessboard corners
-        std::vector<cv::Point2f> corners;
-
-        // if (findChessboardCorners(gray, chessboardSize, corners)) {
-        //     // Refine corner locations
-        //     cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1),
-        //                      cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.001));
-        //
-        //     // Store object and image points
-        //     objectPoints.push_back(worldPoints);
-        //     imagePoints.push_back(corners);
-        // }
-
-        putText(gray, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
-                cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
-
-        imshow("Video", gray);
-        key = (char)cv::waitKey(500);
-        if(key == 'c' && findChessboardCorners(gray, chessboardSize, corners)) {
-            // Refine corner locations
-            cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1),
-                             cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.001));
-
-            // Store object and image points
-            objectPoints.push_back(worldPoints);
-            imagePoints.push_back(corners);
-
-            imgSize = image.size();
-        }
-    }
-
-    cv::Mat cameraMatrix, distCoeffs;
-    std::vector<cv::Mat> rvecs, tvecs;
-
-    double repErr = calibrateCamera(objectPoints, imagePoints, imgSize,
-                        cameraMatrix, distCoeffs, rvecs, tvecs);
-
-    std::cout << repErr << std::endl;
-
-    cv::FileStorage fs("./calibration_results.yaml", cv::FileStorage::WRITE);
-    fs << "cameraMatrix" << cameraMatrix;
-    fs << "distCoeffs" << distCoeffs;
-    fs.release(); // Release the file
-
-    cv::destroyAllWindows();
-
-    return 0;
+  return 0;
 }
