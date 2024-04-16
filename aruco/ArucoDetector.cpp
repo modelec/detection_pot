@@ -64,7 +64,6 @@ void ArucoDetector::readCameraParameters(const std::string& path)
     } else {
         std::cerr << "Error reading calibration file." << std::endl;
     }
-    std::cout << "Camera matrix: " << cameraMatrix << " " << this->distCoeffs << std::endl;
 }
 
 void ArucoDetector::addArucoTag(const ArucoTag& tag)
@@ -179,7 +178,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
             cv::Mat rvec, tvec;
 
-            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, cv::SOLVEPNP_IPPE);
+            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false);
 
             if (!headless)
             {
