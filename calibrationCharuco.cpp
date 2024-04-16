@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
                                               distCoeffs, cv::noArray(), cv::noArray(), calibrationFlags);
 
 
-    int nFrames = (int)allCorners.size();
+    /*int nFrames = (int)allCorners.size();
     std::vector< cv::Mat > allCharucoCorners;
     std::vector< cv::Mat > allCharucoIds;
     std::vector< cv::Mat > filteredImages;
@@ -156,9 +156,9 @@ int main(int argc, char *argv[]) {
     // calibrate camera using charuco
     repError =
         cv::aruco::calibrateCameraCharuco(allCharucoCorners, allCharucoIds, charucoboard, imgSize,
-                                      cameraMatrix, distCoeffs, rvecs, tvecs, calibrationFlags);
+                                      cameraMatrix, distCoeffs, rvecs, tvecs, calibrationFlags);*/
 
-    std::cout << "Rep Error: " << repError << std::endl;
+    // std::cout << "Rep Error: " << repError << std::endl;
     std::cout << "Rep Error Aruco: " << arucoRepErr << std::endl;
     std::cout << "Calibration saved to " << outputFile << std::endl;
 
