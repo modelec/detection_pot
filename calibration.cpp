@@ -73,10 +73,10 @@ int main(int argc, char *argv[])
         //     imagePoints.push_back(corners);
         // }
 
-        putText(imageCopy, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
+        putText(gray, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
                 cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
 
-        imshow("Video", imageCopy);
+        imshow("Video", gray);
         key = (char)cv::waitKey(500);
         if(key == 'c' && findChessboardCorners(gray, chessboardSize, corners)) {
             // Refine corner locations
