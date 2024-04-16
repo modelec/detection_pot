@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
 
     int squaresX = 5;
     int squaresY = 7;
-    float squareLength = 0.1f;
-    float markerLength = 0.05f;
+    float squareLength = 0.0338f;
+    float markerLength = 0.0167f;
     std::string outputFile = "camera_calibration.yml";
 
     // create charuco board object
