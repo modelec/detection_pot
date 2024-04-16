@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     }
 
     // Set the chessboard size (number of inner corners in width and height)
-    cv::Size chessboardSize(6, 9);
+    cv::Size chessboardSize(9, 6);
 
     cv::Size imgSize;
 
