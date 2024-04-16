@@ -36,31 +36,49 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::string imagesDirectory = argv[1];
-    std::vector<cv::String> imageFiles;
-    cv::glob(imagesDirectory + "/*.jpg", imageFiles);
+    lccv::PiCamera* cam = new lccv::PiCamera;
+    cam->options->video_width=1920;
+    cam->options->video_height=1080;
+    cam->options->framerate=5;
+    cam->options->verbose=true;
+    cv::namedWindow("Video",cv::WINDOW_NORMAL);
+    cam->startVideo();
 
-    if (imageFiles.empty()) {
-        std::cerr << "Error: No calibration images found in the specified directory." << std::endl;
-        return -1;
-    }
 
-    for (const auto& imageFile : imageFiles) {
-        std::cout << "Processing image: " << imageFile << std::endl;
+    char key;
 
-        // Load the image
-        cv::Mat img = cv::imread(imageFile);
+    while(key != 27) {
+        cv::Mat image, imageCopy, imgNotRotated;
+        if(!cam->getVideoFrame(imgNotRotated,1000)){
+            std::cout<<"Timeout error"<<std::endl;
+            continue;
+        }
 
-        imgSize = img.size();
+        cv::flip(imgNotRotated, image, -1);
 
         // Convert the image to grayscale
         cv::Mat gray;
-        cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
         // Find chessboard corners
         std::vector<cv::Point2f> corners;
 
-        if (findChessboardCorners(gray, chessboardSize, corners)) {
+        // if (findChessboardCorners(gray, chessboardSize, corners)) {
+        //     // Refine corner locations
+        //     cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1),
+        //                      cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.001));
+        //
+        //     // Store object and image points
+        //     objectPoints.push_back(worldPoints);
+        //     imagePoints.push_back(corners);
+        // }
+
+        putText(imageCopy, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
+                cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0), 2);
+
+        imshow("Video", imageCopy);
+        key = (char)cv::waitKey(500);
+        if(key == 'c' && findChessboardCorners(gray, chessboardSize, corners)) {
             // Refine corner locations
             cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1),
                              cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.001));
@@ -68,8 +86,6 @@ int main(int argc, char *argv[])
             // Store object and image points
             objectPoints.push_back(worldPoints);
             imagePoints.push_back(corners);
-        } else {
-            std::cerr << "Warning: Chessboard pattern not found in image: " << imageFile << std::endl;
         }
     }
 
@@ -79,11 +95,12 @@ int main(int argc, char *argv[])
     calibrateCamera(objectPoints, imagePoints, imgSize,
                         cameraMatrix, distCoeffs, rvecs, tvecs);
 
-    cv::FileStorage fs(imagesDirectory + "/calibration_results.yaml", cv::FileStorage::WRITE);
+    cv::FileStorage fs("./calibration_results.yaml", cv::FileStorage::WRITE);
     fs << "cameraMatrix" << cameraMatrix;
     fs << "distCoeffs" << distCoeffs;
     fs.release(); // Release the file
 
-    return 0;
+    cv::destroyAllWindows();
 
+    return 0;
 }
