@@ -96,8 +96,10 @@ int main(int argc, char *argv[])
     cv::Mat cameraMatrix, distCoeffs;
     std::vector<cv::Mat> rvecs, tvecs;
 
-    calibrateCamera(objectPoints, imagePoints, imgSize,
+    double repErr = calibrateCamera(objectPoints, imagePoints, imgSize,
                         cameraMatrix, distCoeffs, rvecs, tvecs);
+
+    std::cout << repErr << std::endl;
 
     cv::FileStorage fs("./calibration_results.yaml", cv::FileStorage::WRITE);
     fs << "cameraMatrix" << cameraMatrix;
