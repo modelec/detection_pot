@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
         for (const auto& [tags, matrix] : r.second)
         {
             if (tags.type == FLOWER) {
-                std::cout << tags.id << " " << tags.name << " " << matrix.first.at<double>(2, 0) << " " << matrix.first.at<double>(1, 0) << std::endl;
+                std::cout << tags.id << " " << tags.name << " " << matrix.first.at<double>(2, 0) << " " << matrix.first.at<double>(0, 0) << std::endl;
                 //ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
             }
             else if (tags.type == SOLAR_PANEL)
