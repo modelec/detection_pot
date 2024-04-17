@@ -18,4 +18,4 @@ enum Team
     YELLOW
 };
 
-double distanceBetweenRobotAndTag(const cv::Mat& a);
+double distanceBetweenRobotAndTagOnXY(const cv::Mat& a);
