@@ -7,6 +7,8 @@ MyClient::MyClient(const char* ip, const int port) : TCPClient(ip, port)
 
 void MyClient::handleMessage(const std::string& message)
 {
+    std::cout << message << std::endl;
+
     std::vector<std::string> messageSplited = TCPSocket::split(message, ";");
 
     if (messageSplited[1] == "aruco" || messageSplited[1] == "all")
