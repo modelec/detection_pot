@@ -89,10 +89,6 @@ int main(int argc, char *argv[])
             if (tags.type == FLOWER) {
                 std::cout << tags.id << " " << tags.name << " " << matrix.first.at<double>(2, 0) << " " << matrix.first.at<double>(0, 0) << std::endl;
                 //ArucoDetector::flowerDetector(tags, matrix.first, matrix.first, robotPose);
-                auto now = std::chrono::high_resolution_clock::now();
-                std::cout << "Time since last find: " << std::chrono::duration_cast<std::chrono::milliseconds>(now - lastArucoFind).count() << "ms" << std::endl;
-
-                lastArucoFind = now;
             }
             else if (tags.type == SOLAR_PANEL)
             {
@@ -105,6 +101,12 @@ int main(int argc, char *argv[])
         {
             break;
         }
+
+        auto now = std::chrono::high_resolution_clock::now();
+        std::cout << "Time since last find: " << std::chrono::duration_cast<std::chrono::milliseconds>(now - lastArucoFind).count() << "ms" << std::endl;
+
+        lastArucoFind = now;
+
         std::cout << std::endl;
     }
 
