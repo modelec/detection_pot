@@ -62,8 +62,6 @@ int main(int argc, char *argv[])
 
     client.sendMessage("aruco;strat;get robot_pose;0");
 
-    auto lastArucoFind = std::chrono::high_resolution_clock::now();
-
     while (true) {
         auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
 
@@ -101,12 +99,6 @@ int main(int argc, char *argv[])
         {
             break;
         }
-
-        auto now = std::chrono::high_resolution_clock::now();
-        std::cout << "Time since last find: " << std::chrono::duration_cast<std::chrono::milliseconds>(now - lastArucoFind).count() << "ms" << std::endl;
-
-        lastArucoFind = now;
-
         std::cout << std::endl;
     }
 

@@ -38,6 +38,8 @@ void MyClient::handleMessage(const std::string& message)
             std::cout << "Sent to client " << res << std::endl;
 
             this->sendMessage(res.c_str());
+
+			this->arucoTags.clear();
         } else if (messageSplited[2] == "ping")
         {
             this->sendMessage("aruco;ihm;pong;1");
