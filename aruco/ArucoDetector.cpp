@@ -89,7 +89,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
     // TODO to test
-    cam->getVideoFrame(frameNotRotated, 200);
+    cam->getVideoFrame(frameNotRotated, 500);
     cv::flip(frameNotRotated, frame, -1);
     // cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
 
