@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
     }
 
     cam.stopVideo();
-    cv::destroyWindow("Video");
+    cv::destroyWindow("out");
 
     return 0;
 }
