@@ -45,6 +45,7 @@ the use of this software, even if advised of the possibility of such damage.
 #include <iostream>
 #include "aruco_samples_utility.hpp"
 #include <lccv.hpp>
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
@@ -133,15 +134,17 @@ int main(int argc, char *argv[]) {
     cam.options->verbose=true;
     cam.startVideo();
 
-    VideoCapture inputVideo;
-    int waitTime;
-    if(!video.empty()) {
-        inputVideo.open(video);
-        waitTime = 0;
-    } else {
-        inputVideo.open(camId);
-        waitTime = 10;
-    }
+    usleep(500'000);
+
+    // VideoCapture inputVideo;
+    // int waitTime;
+    // if(!video.empty()) {
+    //     inputVideo.open(video);
+    //     waitTime = 0;
+    // } else {
+    //     inputVideo.open(camId);
+    //     waitTime = 10;
+    // }
 
     Ptr<aruco::Dictionary> dictionary;
     if (parser.has("d")) {
