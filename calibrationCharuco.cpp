@@ -140,14 +140,14 @@ int main(int argc, char *argv[]) {
         int dictionaryId = parser.get<int>("d");
         dictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(dictionaryId));
     }
-    else if (parser.has("cd")) {
+    /*else if (parser.has("cd")) {
         FileStorage fs(parser.get<std::string>("cd"), FileStorage::READ);
         bool readOk = aruco::Dictionary::readDictionary(fs.root(), dictionary);
         if(!readOk) {
             cerr << "Invalid dictionary file" << endl;
             return 0;
         }
-    }
+    }*/
     else {
         cerr << "Dictionary not specified" << endl;
         return 0;
