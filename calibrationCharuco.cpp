@@ -152,6 +152,9 @@ int main(int argc, char *argv[]) {
         int dictionaryId = parser.get<int>("d");
         dictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(dictionaryId));
     }
+
+    std::cout << "isok" << std::endl;
+
     /*else if (parser.has("cd")) {
         FileStorage fs(parser.get<std::string>("cd"), FileStorage::READ);
         bool readOk = aruco::Dictionary::readDictionary(fs.root(), dictionary);
@@ -160,10 +163,10 @@ int main(int argc, char *argv[]) {
             return 0;
         }
     }*/
-    else {
+    /*else {
         cerr << "Dictionary not specified" << endl;
         return 0;
-    }
+    }*/
 
     // create charuco board object
     Ptr<aruco::CharucoBoard> charucoboard =
