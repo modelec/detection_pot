@@ -125,6 +125,13 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    lccv::PiCamera cam;
+    cam.options->video_width=1024;
+    cam.options->video_height=768;
+    cam.options->framerate=5;
+    cam.options->verbose=true;
+    cam.startVideo();
+
     VideoCapture inputVideo;
     int waitTime;
     if(!video.empty()) {
@@ -164,9 +171,11 @@ int main(int argc, char *argv[]) {
     vector< Mat > allImgs;
     Size imgSize;
 
-    while(inputVideo.grab()) {
+    char key;
+
+    while(key != 27) {
         Mat image, imageCopy;
-        inputVideo.retrieve(image);
+        cam.getVideoFrame(image,1000);
 
         vector< int > ids;
         vector< vector< Point2f > > corners, rejected;
@@ -194,8 +203,7 @@ int main(int argc, char *argv[]) {
                 Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 2);
 
         imshow("out", imageCopy);
-        char key = (char)waitKey(waitTime);
-        if(key == 27) break;
+        key = static_cast<char>(waitKey(waitTime));
         if(key == 'c' && ids.size() > 0) {
             cout << "Frame captured" << endl;
             allCorners.push_back(corners);
