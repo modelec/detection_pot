@@ -136,8 +136,9 @@ int main(int argc, char *argv[]) {
 
     usleep(500'000);
 
+    int waitTime = 10;
+
     // VideoCapture inputVideo;
-    // int waitTime;
     // if(!video.empty()) {
     //     inputVideo.open(video);
     //     waitTime = 0;
