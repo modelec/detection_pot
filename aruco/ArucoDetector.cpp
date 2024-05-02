@@ -24,7 +24,7 @@ ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team
     this->cam = new lccv::PiCamera;
     cam->options->video_width=1920;
     cam->options->video_height=1080;
-    cam->options->framerate=5;
+    cam->options->framerate=10;
     cam->options->verbose=true;
 
     started = true;
