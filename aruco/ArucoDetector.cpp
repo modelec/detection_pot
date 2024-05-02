@@ -14,10 +14,10 @@ ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team
     // TODO
     // Adjusting parameters based on specific needs
     parameters->adaptiveThreshConstant = true;
-    parameters->minMarkerPerimeterRate = 0.02;
+    /*parameters->minMarkerPerimeterRate = 0.02;
     parameters->maxMarkerPerimeterRate = 4.0;
     parameters->perspectiveRemoveIgnoredMarginPerCell = 0.13;
-    parameters->polygonalApproxAccuracyRate = 0.03;
+    parameters->polygonalApproxAccuracyRate = 0.03;*/
 
     this->readCameraParameters(calibrationPath);
 
