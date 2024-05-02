@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
 
     client.sendMessage("aruco;strat;ready;1");
 
+    usleep(500'000);
+
     while (true) {
         auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
 
