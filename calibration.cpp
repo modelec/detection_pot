@@ -88,8 +88,8 @@ int main()
   std::cout << "Translation vector : " << T << std::endl;
 
   cv::FileStorage fs("./calibration_results.yaml", cv::FileStorage::WRITE);
-  fs << "cameraMatrix" << cameraMatrix;
-  fs << "distCoeffs" << distCoeffs;
+  fs << "camera_matrix" << cameraMatrix;
+  fs << "distortion_coefficients" << distCoeffs;
   fs.release(); // Release the file
 
   cv::destroyAllWindows();
