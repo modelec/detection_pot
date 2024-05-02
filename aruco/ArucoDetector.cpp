@@ -8,7 +8,7 @@ ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team
     // this->parameters = cv::aruco::DetectorParameters();
 
     // 4.6
-    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::PREDEFINED_DICTIONARY_NAME::DICT_4X4_50);
+    this->dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_50);
     this->parameters = cv::aruco::DetectorParameters::create();
 
     // TODO
