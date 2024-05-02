@@ -173,13 +173,17 @@ int main(int argc, char *argv[]) {
             aruco::CharucoBoard::create(squaresX, squaresY, squareLength, markerLength, dictionary);
     Ptr<aruco::Board> board = charucoboard.staticCast<aruco::Board>();
 
+    std::cout << "isok" << std::endl;
+
     // collect data from each frame
     vector< vector< vector< Point2f > > > allCorners;
     vector< vector< int > > allIds;
     vector< Mat > allImgs;
     Size imgSize;
 
-    char key;
+    std::cout << "isok" << std::endl;
+
+    char key = 0;
 
     while(key != 27) {
         Mat image, imageCopy;
@@ -312,6 +316,8 @@ int main(int argc, char *argv[]) {
             if(key == 27) break;
         }
     }
+
+    cam.stopVideo();
 
     return 0;
 }
