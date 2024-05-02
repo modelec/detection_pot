@@ -183,6 +183,8 @@ int main(int argc, char *argv[]) {
 
     std::cout << "isok" << std::endl;
 
+    cv::namedWindow("Video",cv::WINDOW_NORMAL);
+
     char key = 0;
 
     while(key != 27) {
@@ -197,14 +199,20 @@ int main(int argc, char *argv[]) {
         // detect markers
         aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
 
+        std::cout << "isok" << std::endl;
+
         // refind strategy to detect more markers
         if(refindStrategy) aruco::refineDetectedMarkers(image, board, corners, ids, rejected);
+
+        std::cout << "isok" << std::endl;
 
         // interpolate charuco corners
         Mat currentCharucoCorners, currentCharucoIds;
         if(ids.size() > 0)
             aruco::interpolateCornersCharuco(corners, ids, image, charucoboard, currentCharucoCorners,
                                              currentCharucoIds);
+
+        std::cout << "isok" << std::endl;
 
         // draw results
         image.copyTo(imageCopy);
@@ -215,6 +223,8 @@ int main(int argc, char *argv[]) {
 
         putText(imageCopy, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
                 Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 2);
+
+        std::cout << "isok" << std::endl;
 
         imshow("out", imageCopy);
         key = static_cast<char>(waitKey(waitTime));
@@ -320,6 +330,7 @@ int main(int argc, char *argv[]) {
     }
 
     cam.stopVideo();
+    cv::destroyWindow("Video");
 
     return 0;
 }
