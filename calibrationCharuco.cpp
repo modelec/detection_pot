@@ -44,6 +44,7 @@ the use of this software, even if advised of the possibility of such damage.
 #include <vector>
 #include <iostream>
 #include "aruco_samples_utility.hpp"
+#include <lccv.hpp>
 
 using namespace std;
 using namespace cv;
