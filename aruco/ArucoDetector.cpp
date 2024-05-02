@@ -58,8 +58,8 @@ void ArucoDetector::readCameraParameters(const std::string& path)
 {
     cv::FileStorage fs(path, cv::FileStorage::READ);
     if (fs.isOpened()) {
-        fs["cameraMatrix"] >> this->cameraMatrix;
-        fs["distCoeffs"] >> this->distCoeffs;
+        fs["camera_matrix"] >> this->cameraMatrix;
+        fs["distortion_coefficients"] >> this->distCoeffs;
         fs.release();
     } else {
         std::cerr << "Error reading calibration file." << std::endl;
