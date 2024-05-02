@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
     vector< Mat > allImgs;
     Size imgSize;
 
-    cv::namedWindow("Video",cv::WINDOW_NORMAL);
+    cv::namedWindow("out",cv::WINDOW_NORMAL);
 
     char key = 0;
 
