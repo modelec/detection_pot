@@ -165,8 +165,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Rep Error: " << arucoRepErr << std::endl;
 
     cv::FileStorage fs(outputFile, cv::FileStorage::WRITE);
-    fs << "cameraMatrix" << cameraMatrix;
-    fs << "distCoeffs" << distCoeffs;
+    fs << "camera_matrix" << cameraMatrix;
+    fs << "distortion_coefficients" << distCoeffs;
     fs.release(); // Release the file
     cam->stopVideo();
     cv::destroyAllWindows();
