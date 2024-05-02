@@ -189,6 +189,8 @@ int main(int argc, char *argv[]) {
         Mat image, imageCopy;
         cam.getVideoFrame(image,1000);
 
+        std::cout << "isok" << std::endl;
+
         vector< int > ids;
         vector< vector< Point2f > > corners, rejected;
 
