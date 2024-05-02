@@ -153,27 +153,10 @@ int main(int argc, char *argv[]) {
         dictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(dictionaryId));
     }
 
-    std::cout << "isok" << std::endl;
-
-    /*else if (parser.has("cd")) {
-        FileStorage fs(parser.get<std::string>("cd"), FileStorage::READ);
-        bool readOk = aruco::Dictionary::readDictionary(fs.root(), dictionary);
-        if(!readOk) {
-            cerr << "Invalid dictionary file" << endl;
-            return 0;
-        }
-    }*/
-    /*else {
-        cerr << "Dictionary not specified" << endl;
-        return 0;
-    }*/
-
     // create charuco board object
     Ptr<aruco::CharucoBoard> charucoboard =
             aruco::CharucoBoard::create(squaresX, squaresY, squareLength, markerLength, dictionary);
     Ptr<aruco::Board> board = charucoboard.staticCast<aruco::Board>();
-
-    std::cout << "isok" << std::endl;
 
     // collect data from each frame
     vector< vector< vector< Point2f > > > allCorners;
@@ -181,15 +164,14 @@ int main(int argc, char *argv[]) {
     vector< Mat > allImgs;
     Size imgSize;
 
-    std::cout << "isok" << std::endl;
-
     cv::namedWindow("Video",cv::WINDOW_NORMAL);
 
     char key = 0;
 
     while(key != 27) {
-        Mat image, imageCopy;
-        cam.getVideoFrame(image,1000);
+        Mat imageF, imageCopy, image;
+        cam.getVideoFrame(imageF,1000);
+        flip(imageF, image, -1);
 
         std::cout << "isok" << std::endl;
 
