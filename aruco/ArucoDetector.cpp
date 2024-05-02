@@ -178,7 +178,12 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
             cv::Mat rvec, tvec;
 
-            solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false);
+            try {
+                solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false);
+            } catch (const cv::Exception& e) {
+                std::cerr << "Error: " << e.what() << std::endl;
+                continue;
+            }
 
             if (!headless)
             {
