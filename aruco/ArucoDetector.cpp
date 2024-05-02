@@ -156,7 +156,14 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     // detector.detectMarkers(frame, markerCorners, markerIds);
 
     // 4.6
-    cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, this->parameters);
+    try {
+        cv::aruco::detectMarkers(frame, this->dictionary, markerCorners, markerIds, this->parameters);
+    } catch (const cv::Exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        result.first = 1;
+        result.second.clear();
+        return result;
+    }
 
     if (!markerIds.empty())
     {
