@@ -103,14 +103,14 @@ int main(int argc, char *argv[]) {
     if(parser.get<bool>("pc")) calibrationFlags |= CALIB_FIX_PRINCIPAL_POINT;
 
     Ptr<aruco::DetectorParameters> detectorParams;
-    if(parser.has("dp")) {
+    /*if(parser.has("dp")) {
         FileStorage fs(parser.get<string>("dp"), FileStorage::READ);
         bool readOk = aruco::DetectorParameters::readDetectorParameters(fs.root(), detectorParams);
         if(!readOk) {
             cerr << "Invalid detector parameters file" << endl;
             return 0;
         }
-    }
+    }*/
 
     bool refindStrategy = parser.get<bool>("rs");
     int camId = parser.get<int>("ci");
