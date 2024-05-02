@@ -13,8 +13,8 @@ ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team
 
     // TODO
     // Adjusting parameters based on specific needs
-    parameters->adaptiveThreshConstant = true;
-    /*parameters->minMarkerPerimeterRate = 0.02;
+    /*parameters->adaptiveThreshConstant = true;
+    parameters->minMarkerPerimeterRate = 0.02;
     parameters->maxMarkerPerimeterRate = 4.0;
     parameters->perspectiveRemoveIgnoredMarginPerCell = 0.13;
     parameters->polygonalApproxAccuracyRate = 0.03;*/
@@ -89,8 +89,8 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
     cam->getVideoFrame(frameNotRotated, 1000);
-    cv::flip(frameNotRotated, frame, -1);
-    // cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
+    cv::flip(frameNotRotated, frameDistored, -1);
+    cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
 
     std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
 
@@ -179,7 +179,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
             cv::Mat rvec, tvec;
 
             try {
-                solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false);
+                solvePnP(tag.objectRepresenation, markerCorners.at(i), cameraMatrix, distCoeffs, rvec, tvec, false, cv::SOLVEPNP_IPPE_SQUARE);
             } catch (const cv::Exception& e) {
                 std::cerr << "Error: " << e.what() << std::endl;
                 continue;
