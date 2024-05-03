@@ -11,6 +11,11 @@ void MyClient::handleMessage(const std::string& message)
 
     std::vector<std::string> messageSplited = TCPSocket::split(message, ";");
 
+    if (messageSplited.size() != 4) {
+        std::cerr << "Invalid message format" << std::endl;
+        return;
+    }
+
     if (messageSplited[1] == "aruco" || messageSplited[1] == "all")
     {
         if (messageSplited[2] == "get aruco")
