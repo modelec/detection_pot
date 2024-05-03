@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
     ArucoDetector detector(calibrationPath, BLUE, headless);
 
     auto whiteFlower = ArucoTag(36, "White_flower", 19.6, FLOWER);
-    // whiteFlower.setFlowerObjectRepresentation();log
+    whiteFlower.setFlowerObjectRepresentation();
     auto purpleFlower = ArucoTag(13, "Purple_flower", 19.6, FLOWER);
-    // purpleFlower.setFlowerObjectRepresentation();
+    purpleFlower.setFlowerObjectRepresentation();
 
     auto solarPanel = ArucoTag(47, "Solar_panel", 36.8, SOLAR_PANEL);
 
