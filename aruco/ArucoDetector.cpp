@@ -1,5 +1,7 @@
 #include "ArucoDetector.h"
 
+#include <pstl/glue_execution_defs.h>
+
 ArucoDetector::ArucoDetector(const std::string& calibrationPath, const Team team, const bool headless) : headless(headless), team(team)
 {
     // opencv 4.8
@@ -91,7 +93,7 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
 
     try {
         cam->getVideoFrame(frameNotRotated, 1000);
-    } catch (cv::Exception& e) {
+    } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
         result.first = -2;
