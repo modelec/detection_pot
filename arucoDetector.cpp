@@ -61,7 +61,13 @@ int main(int argc, char *argv[])
     usleep(500'000);
 
     while (true) {
-        auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
+
+        try {
+            auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
+        } catch (const std::exception& ex) {
+            std::cerr << "Error: " << ex.what() << std::endl;
+            return -1;
+        }
 
         code = r.first;
 

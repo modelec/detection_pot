@@ -88,7 +88,16 @@ std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> Ar
     cv::Mat frame;
     cv::Mat frameNotRotated;
     cv::Mat frameDistored;
-    cam->getVideoFrame(frameNotRotated, 1000);
+
+    try {
+        cam->getVideoFrame(frameNotRotated, 1000);
+    } catch (cv::Exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> result;
+        result.first = -2;
+        return result;
+    }
+
     cv::flip(frameNotRotated, frameDistored, -1);
     cv::undistort(frameDistored, frame, cameraMatrix, distCoeffs);
 
