@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     while (true) {
 
-        std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> r;
+        std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> r = std::make_pair(-1, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>());
 
         try {
             r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
