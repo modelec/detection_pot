@@ -62,8 +62,10 @@ int main(int argc, char *argv[])
 
     while (true) {
 
+        std::pair<int, std::vector<std::pair<ArucoTag, std::pair<cv::Mat, cv::Mat>>>> r;
+
         try {
-            auto r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
+            r = detector.detectArucoTags({whiteFlower, purpleFlower, solarPanel});
         } catch (const std::exception& ex) {
             std::cerr << "Error: " << ex.what() << std::endl;
             return -1;
