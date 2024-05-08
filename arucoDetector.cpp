@@ -5,9 +5,19 @@
 #include <thread>
 #include <atomic>
 #include <optional>
+#include <csignal>
+
+std::atomic<bool> shouldStop = false;
+
+void signalHandler( int signum ) {
+    shouldStop = true;
+}
+
 
 int main(int argc, char *argv[])
 {
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
     // Settup argument parser
 
     bool headless = false;
@@ -101,7 +111,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        if (client.shouldStop() || stopRequested)
+        if (client.shouldStop() || stopRequested || shouldStop)
         {
             break;
         }
