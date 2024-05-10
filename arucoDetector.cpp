@@ -13,7 +13,6 @@ void signalHandler( int signum ) {
     shouldStop = true;
 }
 
-
 int main(int argc, char *argv[])
 {
     signal(SIGINT, signalHandler);
