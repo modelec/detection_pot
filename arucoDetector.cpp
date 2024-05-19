@@ -1,6 +1,8 @@
 #include "aruco/ArucoDetector.h"
 #include "tcp/MyClient.h"
 
+#include <Modelec/CLParser.h>
+
 #include <iostream>
 #include <thread>
 #include <atomic>
@@ -23,32 +25,32 @@ int main(int argc, char *argv[])
 
     bool stopRequested = false;
 
-    for (int i = 0; i < argc; i++)
-    {
-        if (std::string(argv[i]) == "--help")
-        {
-            std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <TCP port>" << std::endl;
-            std::cout << "video capture device: The ID of the video capture device to use. Usually 0 for the built-in camera." << std::endl;
-            std::cout << "path/to/calibration_results.yaml: The path to the calibration results file." << std::endl;
-            std::cout << "to run the program in headless mode, add the --headless flag." << std::endl;
-            return 0;
-        }
+    CLParser clParser(argc, argv);
 
-        if (std::string(argv[i]) == "--headless")
-        {
-            std::cout << "Running in headless mode." << std::endl;
-            headless = true;
-        }
+    if (clParser.hasOption("--help"))
+    {
+        std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <port>" << std::endl;
+        std::cout << "video capture device: The ID of the video capture device to use. Usually 0 for the built-in camera." << std::endl;
+        std::cout << "path/to/calibration_results.yaml: The path to the calibration results file." << std::endl;
+        std::cout << "to run the program in headless mode, add the --headless flag." << std::endl;
+        return 0;
     }
 
-    if (argc < 3) {
+    if (clParser.hasOption("headless")) {
+        std::cout << "Running in headless mode." << std::endl;
+        headless = true;
+    }
+
+    int port = std::stoi(clParser.getOption("port", "8080"));
+
+    std::optional<std::string> calibrationPath = clParser.getOption("calib-file");
+
+    if (!calibrationPath.has_value()) {
         std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <port>" << std::endl;
         return 1;
     }
 
-    const std::string calibrationPath = argv[1];
-
-    ArucoDetector detector(calibrationPath, BLUE, headless);
+    ArucoDetector detector(calibrationPath.value(), BLUE, headless);
 
     auto whiteFlower = ArucoTag(36, "White_flower", 18.3, FLOWER);
     // whiteFlower.setFlowerObjectRepresentation();
@@ -58,8 +60,6 @@ int main(int argc, char *argv[])
     auto solarPanel = ArucoTag(47, "Solar_panel", 36.8, SOLAR_PANEL);
 
     int code;
-
-    int port = std::stoi(argv[2]);
 
     MyClient client("127.0.0.1", port);
 

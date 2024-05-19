@@ -9,6 +9,8 @@ pkg_check_modules(LIBCAMERA REQUIRED libcamera)
 
 find_package(Modelec COMPONENTS
         TCPClient
+        Utils
+        CLParser
         REQUIRED
 )
 
@@ -50,7 +52,7 @@ add_executable(arucoDetector ${arucoDetectionSources})
 
 target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
 
-target_link_libraries( arucoDetector Modelec::TCPClient )
+target_link_libraries( arucoDetector Modelec::TCPClient Modelec::CLParser Modelec::Utils )
 
 set(photo
         ${COMMON_SOURCES}
