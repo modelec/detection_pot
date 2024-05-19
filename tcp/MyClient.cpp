@@ -9,7 +9,7 @@ void MyClient::handleMessage(const std::string& message)
 {
     std::cout << message << std::endl;
 
-    std::vector<std::string> messageSplited = TCPSocket::split(message, ";");
+    std::vector<std::string> messageSplited = Modelec::split(message, ";");
 
     if (messageSplited.size() != 4) {
         std::cerr << "Invalid message format" << std::endl;

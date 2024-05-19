@@ -6,7 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 find_package( OpenCV REQUIRED )
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCAMERA REQUIRED libcamera)
-pkg_check_modules(TCPSocket REQUIRED TCPSocket)
+
+find_package(Modelec COMPONENTS
+        TCPClient
+        REQUIRED
+)
 
 include_directories(${LIBCAMERA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS})
 
@@ -46,7 +50,7 @@ add_executable(arucoDetector ${arucoDetectionSources})
 
 target_link_libraries( arucoDetector -llccv ${OpenCV_LIBS} )
 
-target_link_libraries( arucoDetector TCPSocket )
+target_link_libraries( arucoDetector Modelec::TCPClient )
 
 set(photo
         ${COMMON_SOURCES}
