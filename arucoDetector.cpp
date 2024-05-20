@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         headless = true;
     }
 
-    int port = std::stoi(clParser.getOption("port", "8080"));
+    int port = clParser.getOption<int>("port", 8080);
 
     std::optional<std::string> calibrationPath = clParser.getOption("calib-file");
 
