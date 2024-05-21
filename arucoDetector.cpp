@@ -43,7 +43,9 @@ int main(int argc, char *argv[])
 
     int port = clParser.getOption<int>("port", 8080);
 
-    std::optional<std::string> calibrationPath = clParser.getOption("calib-file");
+    auto host = clParser.getOption("host", "127.0.0.1");
+
+    std::optional<std::string> calibrationPath = clParser.getOption<std::string>("calib-file");
 
     if (!calibrationPath.has_value()) {
         std::cout << "Usage: " << argv[0] << "<path/to/calibration_results.yaml> <port>" << std::endl;
@@ -61,7 +63,7 @@ int main(int argc, char *argv[])
 
     int code;
 
-    MyClient client("127.0.0.1", port);
+    MyClient client(host, port);
 
     client.start();
 
